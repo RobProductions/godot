@@ -102,6 +102,7 @@ class EditorSettingsDialog : public AcceptDialog {
 	void _filter_shortcuts_by_event(const Ref<InputEvent> &p_event);
 	bool _should_display_shortcut(const String &p_name, const Array &p_events) const;
 
+	static void _set_shortcut_input(const String &p_name, Ref<InputEventKey> &p_event);
 	void _update_shortcuts();
 	void _shortcut_button_pressed(Object *p_item, int p_column, int p_idx, MouseButton p_button = MouseButton::LEFT);
 	void _shortcut_cell_double_clicked();
@@ -122,6 +123,7 @@ protected:
 
 public:
 	void popup_edit_settings();
+	static void update_navigation_preset();
 
 	EditorSettingsDialog();
 	~EditorSettingsDialog();

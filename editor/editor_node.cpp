@@ -8083,6 +8083,9 @@ EditorNode::EditorNode() {
 	ED_SHORTCUT_AND_COMMAND("editor/editor_next", TTR("Open the next Editor"));
 	ED_SHORTCUT_AND_COMMAND("editor/editor_prev", TTR("Open the previous Editor"));
 
+	// Apply setting presets in case editor_settings was manually edited.
+	EditorSettingsDialog::update_navigation_preset();
+
 	screenshot_timer = memnew(Timer);
 	screenshot_timer->set_one_shot(true);
 	screenshot_timer->set_wait_time(settings_menu->get_submenu_popup_delay() + 0.1f);
