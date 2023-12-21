@@ -681,6 +681,7 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 		p_theme->set_color("icon_normal_color", "Button", p_config.icon_normal_color);
 		p_theme->set_color("icon_hover_color", "Button", p_config.icon_hover_color);
 		p_theme->set_color("icon_focus_color", "Button", p_config.icon_focus_color);
+		p_theme->set_color("icon_hover_pressed_color", "Button", p_config.icon_pressed_color);
 		p_theme->set_color("icon_pressed_color", "Button", p_config.icon_pressed_color);
 		p_theme->set_color("icon_disabled_color", "Button", p_config.icon_disabled_color);
 
@@ -1679,7 +1680,12 @@ void EditorThemeManager::_populate_editor_styles(const Ref<EditorTheme> &p_theme
 		p_theme->set_stylebox("BottomPanel", EditorStringName(EditorStyles), style_bottom_panel);
 
 		// Main menu.
-		p_theme->set_stylebox("MenuHover", EditorStringName(EditorStyles), p_config.button_style_hover);
+		Ref<StyleBoxFlat> menu_transparent_style = p_config.button_style->duplicate();
+		menu_transparent_style->set_bg_color(Color(1, 1, 1, 0));
+		menu_transparent_style->set_border_width_all(0);
+		Ref<StyleBoxFlat> menu_hover_style = p_config.button_style_hover->duplicate();
+		p_theme->set_stylebox("MenuTransparent", EditorStringName(EditorStyles), menu_transparent_style);
+		p_theme->set_stylebox("MenuHover", EditorStringName(EditorStyles), menu_hover_style);
 	}
 
 	// Editor GUI widgets.
@@ -1736,6 +1742,8 @@ void EditorThemeManager::_populate_editor_styles(const Ref<EditorTheme> &p_theme
 				style_flat_button->set_content_margin((Side)i, p_config.button_style->get_margin((Side)i) + p_config.button_style->get_border_width((Side)i));
 			}
 
+			Ref<StyleBoxFlat> style_flat_button_hover = p_config.button_style_hover->duplicate();
+
 			Ref<StyleBoxFlat> style_flat_button_pressed = p_config.button_style_pressed->duplicate();
 			Color flat_pressed_color = p_config.dark_color_1.lightened(0.24).lerp(p_config.accent_color, 0.2) * Color(0.8, 0.8, 0.8, 0.85);
 			if (p_config.dark_theme) {
@@ -1744,12 +1752,12 @@ void EditorThemeManager::_populate_editor_styles(const Ref<EditorTheme> &p_theme
 			style_flat_button_pressed->set_bg_color(flat_pressed_color);
 
 			p_theme->set_stylebox("normal", "FlatButton", style_flat_button);
-			p_theme->set_stylebox("hover", "FlatButton", style_flat_button);
+			p_theme->set_stylebox("hover", "FlatButton", style_flat_button_hover);
 			p_theme->set_stylebox("pressed", "FlatButton", style_flat_button_pressed);
 			p_theme->set_stylebox("disabled", "FlatButton", style_flat_button);
 
 			p_theme->set_stylebox("normal", "FlatMenuButton", style_flat_button);
-			p_theme->set_stylebox("hover", "FlatMenuButton", style_flat_button);
+			p_theme->set_stylebox("hover", "FlatMenuButton", style_flat_button_hover);
 			p_theme->set_stylebox("pressed", "FlatMenuButton", style_flat_button_pressed);
 			p_theme->set_stylebox("disabled", "FlatMenuButton", style_flat_button);
 
