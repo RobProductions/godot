@@ -848,6 +848,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 		style_widget_hover->set_border_color(mono_color * Color(1, 1, 1, 0.05));
 	}
 
+	Ref<StyleBoxFlat> style_widget_transparent = style_widget->duplicate();
+	style_widget_transparent->set_bg_color(Color(1, 1, 1, 0));
+	style_widget_transparent->set_border_width_all(0);
+
 	// Style for windows, popups, etc..
 	Ref<StyleBoxFlat> style_popup = style_default->duplicate();
 	const int popup_margin_size = default_margin_size * EDSCALE * 3;
@@ -1006,6 +1010,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 
 	theme->set_constant("outline_size", "MenuButton", 0);
 
+	theme->set_stylebox("MenuTransparent", EditorStringName(EditorStyles), style_widget_transparent);
 	theme->set_stylebox("MenuHover", EditorStringName(EditorStyles), style_widget_hover);
 
 	// Buttons
@@ -1026,6 +1031,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("icon_normal_color", "Button", icon_normal_color);
 	theme->set_color("icon_hover_color", "Button", icon_hover_color);
 	theme->set_color("icon_focus_color", "Button", icon_focus_color);
+	theme->set_color("icon_hover_pressed_color", "Button", icon_pressed_color);
 	theme->set_color("icon_pressed_color", "Button", icon_pressed_color);
 	theme->set_color("icon_disabled_color", "Button", icon_disabled_color);
 
@@ -1047,12 +1053,12 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	style_flat_button_pressed->set_bg_color(flat_pressed_color);
 
 	theme->set_stylebox("normal", "FlatButton", style_flat_button);
-	theme->set_stylebox("hover", "FlatButton", style_flat_button);
+	theme->set_stylebox("hover", "FlatButton", style_widget_hover);
 	theme->set_stylebox("pressed", "FlatButton", style_flat_button_pressed);
 	theme->set_stylebox("disabled", "FlatButton", style_flat_button);
 
 	theme->set_stylebox("normal", "FlatMenuButton", style_flat_button);
-	theme->set_stylebox("hover", "FlatMenuButton", style_flat_button);
+	theme->set_stylebox("hover", "FlatMenuButton", style_widget_hover);
 	theme->set_stylebox("pressed", "FlatMenuButton", style_flat_button_pressed);
 	theme->set_stylebox("disabled", "FlatMenuButton", style_flat_button);
 
