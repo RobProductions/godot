@@ -52,8 +52,20 @@ void EditorRunBar::_notification(int p_what) {
 
 		case NOTIFICATION_THEME_CHANGED: {
 			_update_play_buttons();
+			play_button->add_theme_style_override("disabled", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			play_button->add_theme_style_override("pressed", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
 			pause_button->set_icon(get_editor_theme_icon(SNAME("Pause")));
+			pause_button->add_theme_style_override("disabled", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			pause_button->add_theme_style_override("pressed", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
 			stop_button->set_icon(get_editor_theme_icon(SNAME("Stop")));
+			stop_button->add_theme_style_override("disabled", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			stop_button->add_theme_style_override("pressed", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			play_scene_button->add_theme_style_override("disabled", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			play_scene_button->add_theme_style_override("pressed", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			play_custom_scene_button->add_theme_style_override("disabled", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			play_custom_scene_button->add_theme_style_override("pressed", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			write_movie_button->add_theme_style_override("disabled", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
+			write_movie_button->add_theme_style_override("pressed", get_theme_stylebox(SNAME("normal"), "FlatMenuButton"));
 
 			if (is_movie_maker_enabled()) {
 				main_panel->add_theme_style_override("panel", get_theme_stylebox(SNAME("LaunchPadMovieMode"), EditorStringName(EditorStyles)));
@@ -372,7 +384,7 @@ EditorRunBar::EditorRunBar() {
 
 	play_button = memnew(Button);
 	main_hbox->add_child(play_button);
-	play_button->set_flat(true);
+	play_button->set_flat(false);
 	play_button->set_toggle_mode(true);
 	play_button->set_focus_mode(Control::FOCUS_NONE);
 	play_button->set_tooltip_text(TTR("Run the project's default scene."));
@@ -384,7 +396,7 @@ EditorRunBar::EditorRunBar() {
 
 	pause_button = memnew(Button);
 	main_hbox->add_child(pause_button);
-	pause_button->set_flat(true);
+	pause_button->set_flat(false);
 	pause_button->set_toggle_mode(true);
 	pause_button->set_focus_mode(Control::FOCUS_NONE);
 	pause_button->set_tooltip_text(TTR("Pause the running project's execution for debugging."));
@@ -396,7 +408,7 @@ EditorRunBar::EditorRunBar() {
 
 	stop_button = memnew(Button);
 	main_hbox->add_child(stop_button);
-	stop_button->set_flat(true);
+	stop_button->set_flat(false);
 	stop_button->set_focus_mode(Control::FOCUS_NONE);
 	stop_button->set_tooltip_text(TTR("Stop the currently running project."));
 	stop_button->set_disabled(true);
@@ -412,7 +424,7 @@ EditorRunBar::EditorRunBar() {
 
 	play_scene_button = memnew(Button);
 	main_hbox->add_child(play_scene_button);
-	play_scene_button->set_flat(true);
+	play_scene_button->set_flat(false);
 	play_scene_button->set_toggle_mode(true);
 	play_scene_button->set_focus_mode(Control::FOCUS_NONE);
 	play_scene_button->set_tooltip_text(TTR("Run the currently edited scene."));
@@ -424,7 +436,7 @@ EditorRunBar::EditorRunBar() {
 
 	play_custom_scene_button = memnew(Button);
 	main_hbox->add_child(play_custom_scene_button);
-	play_custom_scene_button->set_flat(true);
+	play_custom_scene_button->set_flat(false);
 	play_custom_scene_button->set_toggle_mode(true);
 	play_custom_scene_button->set_focus_mode(Control::FOCUS_NONE);
 	play_custom_scene_button->set_tooltip_text(TTR("Run a specific scene."));
@@ -439,7 +451,7 @@ EditorRunBar::EditorRunBar() {
 
 	write_movie_button = memnew(Button);
 	write_movie_panel->add_child(write_movie_button);
-	write_movie_button->set_flat(true);
+	write_movie_button->set_flat(false);
 	write_movie_button->set_toggle_mode(true);
 	write_movie_button->set_pressed(false);
 	write_movie_button->set_focus_mode(Control::FOCUS_NONE);
