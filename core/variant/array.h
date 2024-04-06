@@ -223,7 +223,6 @@ public:
 	Array(const Array &p_from, const StructInfo &p_struct_info);
 	Array(const Dictionary &p_from, const StructInfo &p_struct_info);
 	Array(const StructInfo &p_struct_info, bool p_is_array_of_structs = false);
-	Array(const Vector<Variant> &p_vec);
 	Array();
 	~Array();
 };

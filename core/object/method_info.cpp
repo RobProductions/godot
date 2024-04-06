@@ -75,16 +75,16 @@ MethodInfo MethodInfo::from_dict(const Dictionary &p_dict) {
 		args = p_dict["args"];
 	}
 
-	for (int i = 0; i < args.size(); i++) {
-		Dictionary d = args[i];
+	for (const Variant &arg : args) {
+		Dictionary d = arg;
 		mi.arguments.push_back(PropertyInfo::from_dict(d));
 	}
 	Array defargs;
 	if (p_dict.has("default_args")) {
 		defargs = p_dict["default_args"];
 	}
-	for (int i = 0; i < defargs.size(); i++) {
-		mi.default_arguments.push_back(defargs[i]);
+	for (const Variant &defarg : defargs) {
+		mi.default_arguments.push_back(defarg);
 	}
 
 	if (p_dict.has("return")) {

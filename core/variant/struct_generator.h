@@ -42,27 +42,27 @@ class Struct;
 #define STRUCT_DECLARE(m_struct_name) using StructType = m_struct_name
 
 #define STRUCT_MEMBER_TYPEDEF_ALIAS(m_type, m_member_name, m_member_name_alias, m_default)                                                       \
+	using Type = m_type;                                                                                                                         \
 	_FORCE_INLINE_ static const StringName get_name() { return SNAME(m_member_name_alias); }                                                     \
 	_FORCE_INLINE_ static Variant get_variant(const StructType &p_struct) { return to_variant(p_struct.m_member_name); }                         \
 	_FORCE_INLINE_ static const Variant get_default_value_variant() { return to_variant(m_default); }                                            \
-	_FORCE_INLINE_ static m_type get(const StructType &p_struct) { return p_struct.m_member_name; }                                              \
-	_FORCE_INLINE_ static m_type get_default_value() { return m_default; }                                                                       \
+	_FORCE_INLINE_ static Type get(const StructType &p_struct) { return p_struct.m_member_name; }                                                \
+	_FORCE_INLINE_ static Type get_default_value() { return m_default; }                                                                         \
 	_FORCE_INLINE_ static void set_variant(StructType &p_struct, const Variant &p_variant) { p_struct.m_member_name = from_variant(p_variant); } \
-	_FORCE_INLINE_ static void set(StructType &p_struct, const m_type &p_value) { p_struct.m_member_name = p_value; }                            \
-	using Type = m_type
+	_FORCE_INLINE_ static void set(StructType &p_struct, const m_type &p_value) { p_struct.m_member_name = p_value; }
 
 #define STRUCT_MEMBER_TYPEDEF(m_type, m_member_name, m_default) \
 	STRUCT_MEMBER_TYPEDEF_ALIAS(m_type, m_member_name, #m_member_name, m_default)
 
 #define STRUCT_MEMBER_TYPEDEF_POINTER(m_type, m_member_name, m_default)                                                                          \
+	using Type = m_type *;                                                                                                                       \
 	_FORCE_INLINE_ static const StringName get_name() { return SNAME(#m_member_name); }                                                          \
 	_FORCE_INLINE_ static Variant get_variant(const StructType &p_struct) { return to_variant(p_struct.m_member_name); }                         \
 	_FORCE_INLINE_ static const Variant get_default_value_variant() { return to_variant(m_default); }                                            \
-	_FORCE_INLINE_ static m_type *get(const StructType &p_struct) { return p_struct.m_member_name; }                                             \
+	_FORCE_INLINE_ static Type get(const StructType &p_struct) { return p_struct.m_member_name; }                                                \
 	_FORCE_INLINE_ static const m_type *get_default_value() { return m_default; }                                                                \
 	_FORCE_INLINE_ static void set_variant(StructType &p_struct, const Variant &p_variant) { p_struct.m_member_name = from_variant(p_variant); } \
-	_FORCE_INLINE_ static void set(StructType &p_struct, m_type *p_value) { p_struct.m_member_name = p_value; }                                  \
-	using Type = m_type *
+	_FORCE_INLINE_ static void set(StructType &p_struct, Type p_value) { p_struct.m_member_name = p_value; }
 
 #define STRUCT_MEMBER_PRIMITIVE_ALIAS(m_type, m_member_name, m_member_name_alias, m_default)                \
 	m_type m_member_name = m_default;                                                                       \
