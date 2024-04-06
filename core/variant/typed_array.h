@@ -90,7 +90,7 @@ public:
 	}
 	_FORCE_INLINE_ TypedArray(const List<T> *p_list) {
 		initialize_struct_type(T::get_struct_info(), true);
-		for (const List<T>::Element *E = p_list->front(); E; E = E->next()) {
+		for (const typename List<T>::Element *E = p_list->front(); E; E = E->next()) {
 			push_back(Struct<T>(E->get()));
 		}
 	}
