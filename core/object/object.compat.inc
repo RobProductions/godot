@@ -107,11 +107,9 @@ TypedArray<Dictionary> Object::_get_signal_connection_list_compat_82198(const St
 
 TypedArray<Dictionary> Object::_get_incoming_connections_compat_82198() const {
 	TypedArray<Dictionary> ret;
-	int connections_amount = connections.size();
-	for (int idx_conn = 0; idx_conn < connections_amount; idx_conn++) {
-		ret.push_back(connections[idx_conn]);
+	for (const Connection &conn : connections) {
+		ret.push_back(conn);
 	}
-
 	return ret;
 }
 

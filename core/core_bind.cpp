@@ -1621,10 +1621,6 @@ bool ClassDB::is_class_enum_bitfield(const StringName &p_class, const StringName
 	return ::ClassDB::is_enum_bitfield(p_class, p_enum, p_no_inheritance);
 }
 
-bool ClassDB::is_class_enabled(const StringName &p_class) const {
-	return ::ClassDB::is_class_enabled(p_class);
-}
-
 bool ClassDB::class_has_struct(const StringName &p_class, const StringName &p_struct, bool p_no_inheritance) const {
 	return ::ClassDB::get_struct_info(p_class, p_struct, p_no_inheritance) != nullptr;
 }
@@ -1666,6 +1662,10 @@ TypedArray<Dictionary> ClassDB::class_get_struct_members(const StringName &p_cla
 	return ret;
 }
 
+bool ClassDB::is_class_enabled(const StringName &p_class) const {
+	return ::ClassDB::is_class_enabled(p_class);
+}
+
 #ifdef TOOLS_ENABLED
 void ClassDB::get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const {
 	const String pf = p_function;
@@ -1673,9 +1673,9 @@ void ClassDB::get_argument_options(const StringName &p_function, int p_idx, List
 	if (p_idx == 0) {
 		first_argument_is_class = (pf == "get_inheriters_from_class" || pf == "get_parent_class" ||
 				pf == "class_exists" || pf == "can_instantiate" || pf == "instantiate" ||
-				pf == "class_has_signal" || pf == "class_get_signal" || pf == "class_get_signal_list" ||
-				pf == "class_get_property_list" || pf == "class_get_property" || pf == "class_set_property" ||
-				pf == "class_has_method" || pf == "class_get_method_list" ||
+				pf == "class_has_signal" || pf == "class_get_signal" || pf == "class_get_signal_list" || pf == "class_get_signal_list_as_struct" ||
+				pf == "class_get_property_list" || pf == "class_get_property_list_as_structs" || pf == "class_get_property" || pf == "class_set_property" ||
+				pf == "class_has_method" || pf == "class_get_method_list" || pf == "class_get_method_list_as_structs" ||
 				pf == "class_get_integer_constant_list" || pf == "class_has_integer_constant" || pf == "class_get_integer_constant" ||
 				pf == "class_has_enum" || pf == "class_get_enum_list" || pf == "class_get_enum_constants" || pf == "class_get_integer_constant_enum" ||
 				pf == "is_class_enabled" || pf == "is_class_enum_bitfield");
@@ -1735,11 +1735,11 @@ void ClassDB::_bind_methods() {
 
 	::ClassDB::bind_method(D_METHOD("is_class_enum_bitfield", "class", "enum", "no_inheritance"), &ClassDB::is_class_enum_bitfield, DEFVAL(false));
 
-	::ClassDB::bind_method(D_METHOD("is_class_enabled", "class"), &ClassDB::is_class_enabled);
-
 	::ClassDB::bind_method(D_METHOD("class_has_struct", "class", "struct", "no_inheritance"), &ClassDB::class_has_struct, DEFVAL(false));
 	::ClassDB::bind_method(D_METHOD("class_get_struct_list", "class", "no_inheritance"), &ClassDB::class_get_struct_list, DEFVAL(false));
 	::ClassDB::bind_method(D_METHOD("class_get_struct_members", "class", "struct"), &ClassDB::class_get_struct_members);
+
+	::ClassDB::bind_method(D_METHOD("is_class_enabled", "class"), &ClassDB::is_class_enabled);
 }
 
 } // namespace special
