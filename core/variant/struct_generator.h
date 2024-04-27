@@ -182,17 +182,32 @@ struct StructInfo {
 	Vector<Variant> default_values;
 
 	StructInfo(){};
-	StructInfo(const StringName &p_name, const int32_t p_count, const Vector<StringName> &p_names, const Vector<Variant::Type> &p_types, const Vector<StringName> &p_class_names, const Vector<const StructInfo *> &p_struct_member_infos, const Vector<Variant> &p_default_values) {
-		name = p_name;
-		count = p_count;
-		names = p_names;
-		types = p_types;
-		class_names = p_class_names;
-		struct_member_infos = p_struct_member_infos;
-		default_values = p_default_values;
-	};
+	StructInfo(const StringName &p_name, const int32_t p_count) :
+			name(p_name), count(p_count) {
+		names.resize(p_count);
+		types.resize(p_count);
+		class_names.resize(p_count);
+		struct_member_infos.resize(p_count);
+		default_values.resize(p_count);
+	}
+	StructInfo(const StringName &p_name, const int32_t p_count, const Vector<StringName> &p_names, const Vector<Variant::Type> &p_types, const Vector<StringName> &p_class_names, const Vector<const StructInfo *> &p_struct_member_infos, const Vector<Variant> &p_default_values) :
+			name(p_name),
+			count(p_count),
+			names(p_names),
+			types(p_types),
+			class_names(p_class_names),
+			struct_member_infos(p_struct_member_infos),
+			default_values(p_default_values){};
 
 	Dictionary to_dict() const;
+
+	_FORCE_INLINE_ void set(int32_t p_index, const StringName &p_name, const Variant::Type &p_type, const StringName &p_class_name, const StructInfo *p_struct_member_info, const Variant &p_default_value) {
+		names.write[p_index] = p_name;
+		types.write[p_index] = p_type;
+		class_names.write[p_index] = p_class_name;
+		struct_member_infos.write[p_index] = p_struct_member_info;
+		default_values.write[p_index] = p_default_value;
+	}
 
 	_FORCE_INLINE_ bool operator==(const StructInfo &p_struct_info) const {
 		return name == p_struct_info.name;

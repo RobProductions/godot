@@ -188,7 +188,7 @@ TEST_CASE("[Struct] PropertyInfo") {
 
 	List<PropertyInfo> list;
 	my_node->get_property_list(&list);
-	PropertyInfo info = list[0];
+	PropertyInfo info = list.get(0);
 
 	TypedArray<Struct<PropertyInfo>> property_list = my_node->call(SNAME("get_property_list_as_structs"));
 	Struct<PropertyInfo> prop = property_list[0];
@@ -226,6 +226,7 @@ TEST_CASE("[Struct] PropertyInfo") {
 		variant_prop.set_named(SNAME("oops"), SNAME("oh no"), valid);
 		CHECK_EQ(valid, false);
 	}
+	memdelete(my_node);
 }
 
 TEST_CASE("[Struct] Validation") {
@@ -282,8 +283,6 @@ TEST_CASE("[Struct] Validation") {
 		ERR_PRINT_ON;
 
 		named_int.assign(also_a_match);
-		bool matches = named_int == also_a_match;
-		print_line(matches);
 		CHECK_MESSAGE(named_int == also_a_match, "failed to assign an array with correct types using 'assign' function");
 	}
 }
@@ -346,6 +345,8 @@ TEST_CASE("[Struct] Nesting") {
 		nested_struct.set_named("value", basic_struct_lookalike);
 		CHECK_EQ(nested_struct["value"], basic_struct);
 		ERR_PRINT_ON;
+
+		memdelete(node);
 	}
 
 	SUBCASE("Typed Array of Struct") {

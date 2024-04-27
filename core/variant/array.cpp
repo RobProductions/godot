@@ -564,7 +564,14 @@ Array Array::duplicate(bool p_deep) const {
 
 Array Array::recursive_duplicate(bool p_deep, int recursion_count) const {
 	Array new_arr;
-	new_arr._p->typed = _p->typed;
+	if (const StructInfo *struct_info = get_struct_info()) {
+		new_arr.set_struct(*struct_info, is_array_of_structs());
+	} else {
+		new_arr._p->typed = _p->typed;
+		if (p_deep) {
+			new_arr.resize(size());
+		}
+	}
 
 	if (recursion_count > MAX_RECURSION) {
 		ERR_PRINT("Max recursion reached");
@@ -574,7 +581,6 @@ Array Array::recursive_duplicate(bool p_deep, int recursion_count) const {
 	if (p_deep) {
 		recursion_count++;
 		int element_count = size();
-		new_arr.resize(element_count);
 		for (int i = 0; i < element_count; i++) {
 			new_arr[i] = get(i).recursive_duplicate(true, recursion_count);
 		}
@@ -1040,7 +1046,7 @@ Array::Array(const StructInfo &p_struct_info, bool is_array_of_structs) {
 	if (!is_array_of_structs) {
 		Variant *pw = _p->array.ptrw();
 		for (int32_t i = 0; i < p_struct_info.count; i++) {
-			pw[i] = p_struct_info.default_values[i];
+			pw[i] = p_struct_info.default_values[i].duplicate(true);
 		}
 	}
 }
