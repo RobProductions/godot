@@ -97,6 +97,13 @@ void SceneTreeEditor::_cell_button_pressed(Object *p_item, int p_column, int p_i
 				if (nv == n) {
 					continue;
 				}
+				if (nv->has_method("is_visible") && n->has_method("set_visible")) {
+					bool nv_visible = bool(nv->call("is_visible"));
+					bool n_visible = bool(n->call("is_visible"));
+					if (nv_visible == n_visible) {
+						continue;
+					}
+				}
 				_toggle_visible(nv);
 			}
 		}
