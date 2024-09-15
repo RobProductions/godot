@@ -818,6 +818,106 @@ namespace Godot.NativeInterop
         }
     }
 
+    // A correctly constructed value needs to call the native default constructor to allocate `_p`.
+    // Don't pass a C# default constructed `godot_struct` to native code, unless it's going to
+    // be re-assigned a new value (the copy constructor checks if `_p` is null so that's fine).
+    [StructLayout(LayoutKind.Explicit)]
+    public ref struct godot_struct
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal readonly unsafe godot_struct* GetUnsafeAddress()
+            => (godot_struct*)Unsafe.AsPointer(ref Unsafe.AsRef(in _getUnsafeAddressHelper));
+
+        [FieldOffset(0)] private byte _getUnsafeAddressHelper;
+
+        // Internally, a Struct is just an Array which utilizes ArrayPrivate
+        [FieldOffset(0)] private unsafe ArrayPrivate* _p;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ArrayPrivate
+        {
+            private uint _safeRefCount;
+
+            public VariantVector _arrayVector;
+
+            private unsafe godot_variant* _readOnly;
+
+            // There are more fields here, but we don't care as we never store this in C#
+
+            public readonly int Size
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _arrayVector.Size;
+            }
+
+            public readonly unsafe bool IsReadOnly
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _readOnly != null;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct VariantVector
+        {
+            private IntPtr _writeProxy;
+            public unsafe godot_variant* _ptr;
+
+            public readonly unsafe int Size
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _ptr != null ? (int)(*((ulong*)_ptr - 1)) : 0;
+            }
+        }
+
+        public readonly unsafe godot_variant* Elements
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _p->_arrayVector._ptr;
+        }
+
+        public readonly unsafe bool IsAllocated
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _p != null;
+        }
+
+        public readonly unsafe int Size
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _p != null ? _p->Size : 0;
+        }
+
+        public readonly unsafe bool IsReadOnly
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _p != null && _p->IsReadOnly;
+        }
+
+        public unsafe void Dispose()
+        {
+            if (_p == null)
+                return;
+            NativeFuncs.godotsharp_struct_destroy(ref this);
+            _p = null;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct movable
+        {
+            private unsafe ArrayPrivate* _p;
+
+            public static unsafe explicit operator movable(in godot_struct value)
+                => *(movable*)CustomUnsafe.AsPointer(ref CustomUnsafe.AsRef(value));
+
+            public static unsafe explicit operator godot_struct(movable value)
+                => *(godot_struct*)Unsafe.AsPointer(ref value);
+
+            public unsafe ref godot_struct DangerousSelfRef =>
+                ref CustomUnsafe.AsRef((godot_struct*)Unsafe.AsPointer(ref this));
+        }
+    }
+
     // IMPORTANT:
     // A correctly constructed value needs to call the native default constructor to allocate `_p`.
     // Don't pass a C# default constructed `godot_dictionary` to native code, unless it's going to

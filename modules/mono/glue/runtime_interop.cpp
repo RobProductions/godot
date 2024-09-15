@@ -624,6 +624,10 @@ void godotsharp_variant_new_array(godot_variant *r_dest, const Array *p_arr) {
 	memnew_placement(r_dest, Variant(*p_arr));
 }
 
+void godotsharp_variant_new_struct(godot_variant *r_dest, const Array *p_arr) {
+	memnew_placement(r_dest, Variant(*p_arr));
+}
+
 void godotsharp_variant_new_packed_byte_array(godot_variant *r_dest, const PackedByteArray *p_pba) {
 	memnew_placement(r_dest, Variant(*p_pba));
 }
@@ -844,6 +848,17 @@ godot_array godotsharp_variant_as_array(const Variant *p_self) {
 	return raw_dest;
 }
 
+godot_struct godotsharp_variant_as_struct(const Variant *p_self) {
+	godot_struct raw_dest;
+	/*
+	StructInfo *dest = (StructInfo *)&raw_dest;
+	memnew_placement(dest, StructInfo(p_self->operator StructInfo()));
+	*/
+	Array *dest = (Array *)&raw_dest;
+	memnew_placement(dest, Array(p_self->operator Array()));
+	return raw_dest;
+}
+
 godot_packed_array godotsharp_variant_as_packed_byte_array(const Variant *p_self) {
 	godot_packed_array raw_dest;
 	PackedByteArray *dest = (PackedByteArray *)&raw_dest;
@@ -951,6 +966,20 @@ godot_variant *godotsharp_array_ptrw(godot_array *p_self) {
 	return reinterpret_cast<godot_variant *>(&reinterpret_cast<Array *>(p_self)->operator[](0));
 }
 
+// struct.h
+
+void godotsharp_struct_new(Array *r_dest) {
+	memnew_placement(r_dest, Array);
+}
+
+void godotsharp_struct_new_copy(Array *r_dest, const Array *p_src) {
+	memnew_placement(r_dest, Array(*p_src));
+}
+
+godot_variant *godotsharp_struct_ptrw(godot_struct *p_self) {
+	return reinterpret_cast<godot_variant *>(&reinterpret_cast<Array *>(p_self)->operator[](0));
+}
+
 // dictionary.h
 
 void godotsharp_dictionary_new(Dictionary *r_dest) {
@@ -1028,6 +1057,10 @@ void godotsharp_callable_destroy(Callable *p_self) {
 }
 
 void godotsharp_array_destroy(Array *p_self) {
+	p_self->~Array();
+}
+
+void godotsharp_struct_destroy(Array *p_self) {
 	p_self->~Array();
 }
 
@@ -1140,6 +1173,72 @@ void godotsharp_array_sort(Array *p_self) {
 
 void godotsharp_array_to_string(const Array *p_self, String *r_str) {
 	*r_str = Variant(*p_self).operator String();
+}
+
+// Struct
+
+int32_t godotsharp_struct_add(Array *p_self, const Variant *p_item) {
+	return godotsharp_array_add(p_self, p_item);
+}
+
+int32_t godotsharp_struct_add_range(Array *p_self, const Array *p_collection) {
+	return godotsharp_array_add_range(p_self, p_collection);
+}
+
+int32_t godotsharp_struct_binary_search(const Array *p_self, int32_t p_index, int32_t p_length, const Variant *p_value) {
+	return godotsharp_array_binary_search(p_self, p_index, p_length, p_value);
+}
+
+void godotsharp_struct_duplicate(const Array *p_self, bool p_deep, Array *r_dest) {
+	godotsharp_array_duplicate(p_self, p_deep, r_dest);
+}
+
+void godotsharp_struct_fill(Array *p_self, const Variant *p_value) {
+	godotsharp_array_fill(p_self, p_value);
+}
+
+int32_t godotsharp_struct_index_of(const Array *p_self, const Variant *p_item, int32_t p_index = 0) {
+	return godotsharp_array_index_of(p_self, p_item, p_index);
+}
+
+void godotsharp_struct_insert(Array *p_self, int32_t p_index, const Variant *p_item) {
+	godotsharp_array_insert(p_self, p_index, p_item);
+}
+
+int32_t godotsharp_struct_last_index_of(const Array *p_self, const Variant *p_item, int32_t p_index) {
+	return godotsharp_array_last_index_of(p_self, p_item, p_index);
+}
+
+void godotsharp_struct_make_read_only(Array *p_self) {
+	godotsharp_array_make_read_only(p_self);
+}
+
+void godotsharp_struct_max(const Array *p_self, Variant *r_value) {
+	godotsharp_array_max(p_self, r_value);
+}
+
+void godotsharp_struct_min(const Array *p_self, Variant *r_value) {
+	godotsharp_array_min(p_self, r_value);
+}
+
+bool godotsharp_struct_recursive_equal(const Array *p_self, const Array *p_other) {
+	return godotsharp_array_recursive_equal(p_self, p_other);
+}
+
+void godotsharp_struct_remove_at(Array *p_self, int32_t p_index) {
+	godotsharp_array_remove_at(p_self, p_index);
+}
+
+int32_t godotsharp_struct_resize(Array *p_self, int32_t p_new_size) {
+	return godotsharp_array_resize(p_self, p_new_size);
+}
+
+void godotsharp_struct_slice(Array *p_self, int32_t p_start, int32_t p_end, int32_t p_step, bool p_deep, Array *r_dest) {
+	godotsharp_array_slice(p_self, p_start, p_end, p_step, p_deep, r_dest);
+}
+
+void godotsharp_struct_to_string(const Array *p_self, String *r_str) {
+	godotsharp_array_to_string(p_self, r_str);
 }
 
 // Dictionary
@@ -1502,6 +1601,7 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_variant_new_aabb,
 	(void *)godotsharp_variant_new_dictionary,
 	(void *)godotsharp_variant_new_array,
+	(void *)godotsharp_variant_new_struct,
 	(void *)godotsharp_variant_new_packed_byte_array,
 	(void *)godotsharp_variant_new_packed_int32_array,
 	(void *)godotsharp_variant_new_packed_int64_array,
@@ -1539,6 +1639,7 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_variant_as_signal,
 	(void *)godotsharp_variant_as_dictionary,
 	(void *)godotsharp_variant_as_array,
+	(void *)godotsharp_variant_as_struct,
 	(void *)godotsharp_variant_as_packed_byte_array,
 	(void *)godotsharp_variant_as_packed_int32_array,
 	(void *)godotsharp_variant_as_packed_int64_array,
@@ -1556,6 +1657,9 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_array_new,
 	(void *)godotsharp_array_new_copy,
 	(void *)godotsharp_array_ptrw,
+	(void *)godotsharp_struct_new,
+	(void *)godotsharp_struct_new_copy,
+	(void *)godotsharp_struct_ptrw,
 	(void *)godotsharp_dictionary_new,
 	(void *)godotsharp_dictionary_new_copy,
 	(void *)godotsharp_packed_byte_array_destroy,
@@ -1575,6 +1679,7 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_signal_destroy,
 	(void *)godotsharp_callable_destroy,
 	(void *)godotsharp_array_destroy,
+	(void *)godotsharp_struct_destroy,
 	(void *)godotsharp_dictionary_destroy,
 	(void *)godotsharp_array_add,
 	(void *)godotsharp_array_add_range,
@@ -1596,6 +1701,22 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_array_slice,
 	(void *)godotsharp_array_sort,
 	(void *)godotsharp_array_to_string,
+	(void *)godotsharp_struct_add,
+	(void *)godotsharp_struct_add_range,
+	(void *)godotsharp_struct_binary_search,
+	(void *)godotsharp_struct_duplicate,
+	(void *)godotsharp_struct_fill,
+	(void *)godotsharp_struct_index_of,
+	(void *)godotsharp_struct_insert,
+	(void *)godotsharp_struct_last_index_of,
+	(void *)godotsharp_struct_make_read_only,
+	(void *)godotsharp_struct_max,
+	(void *)godotsharp_struct_min,
+	(void *)godotsharp_struct_recursive_equal,
+	(void *)godotsharp_struct_remove_at,
+	(void *)godotsharp_struct_resize,
+	(void *)godotsharp_struct_slice,
+	(void *)godotsharp_struct_to_string,
 	(void *)godotsharp_dictionary_try_get_value,
 	(void *)godotsharp_dictionary_set_value,
 	(void *)godotsharp_dictionary_keys,

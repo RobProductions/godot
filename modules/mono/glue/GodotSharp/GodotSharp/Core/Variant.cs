@@ -354,6 +354,10 @@ public partial struct Variant : IDisposable
         VariantUtils.ConvertToSystemArrayOfRid((godot_variant)NativeVar);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Collections.Struct<T> AsGodotStruct<[MustBeVariant] T>() =>
+        VariantUtils.ConvertToStruct<T>((godot_variant)NativeVar);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public GodotObject AsGodotObject() =>
         VariantUtils.ConvertToGodotObject((godot_variant)NativeVar);
 
@@ -667,6 +671,10 @@ public partial struct Variant : IDisposable
         CreateTakingOwnershipOfDisposableValue(VariantUtils.CreateFromArray(from));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Variant CreateFrom<[MustBeVariant] T>(Collections.Struct<T> from) =>
+        CreateTakingOwnershipOfDisposableValue(VariantUtils.CreateFromStruct(from));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Variant CreateFrom(Span<StringName> from) => from;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -692,6 +700,9 @@ public partial struct Variant : IDisposable
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Variant CreateFrom(Collections.Array from) => from;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Variant CreateFrom(Collections.Struct from) => from;
 
     // Implicit conversion operators
 
@@ -950,4 +961,8 @@ public partial struct Variant : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator Variant(Collections.Array from) =>
         CreateTakingOwnershipOfDisposableValue(VariantUtils.CreateFromArray(from));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator Variant(Collections.Struct from) =>
+        CreateTakingOwnershipOfDisposableValue(VariantUtils.CreateFromStruct(from));
 }

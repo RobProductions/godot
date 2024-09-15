@@ -419,6 +419,8 @@ public:
 	operator PackedColorArray() const;
 	operator PackedVector4Array() const;
 
+	operator StructInfo() const;
+
 	operator Vector<::RID>() const;
 	operator Vector<Plane>() const;
 	operator Vector<Face3>() const;

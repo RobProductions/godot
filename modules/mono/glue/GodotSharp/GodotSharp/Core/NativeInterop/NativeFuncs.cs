@@ -203,6 +203,8 @@ namespace Godot.NativeInterop
 
         public static partial void godotsharp_variant_new_array(out godot_variant r_dest, in godot_array p_arr);
 
+        public static partial void godotsharp_variant_new_struct(out godot_variant r_dest, in godot_struct p_arr);
+
         public static partial void godotsharp_variant_new_packed_byte_array(out godot_variant r_dest,
             in godot_packed_byte_array p_pba);
 
@@ -287,6 +289,8 @@ namespace Godot.NativeInterop
 
         public static partial godot_array godotsharp_variant_as_array(in godot_variant p_self);
 
+        public static partial godot_struct godotsharp_variant_as_struct(in godot_variant p_self);
+
         public static partial godot_packed_byte_array godotsharp_variant_as_packed_byte_array(in godot_variant p_self);
 
         public static partial godot_packed_int32_array godotsharp_variant_as_packed_int32_array(in godot_variant p_self);
@@ -336,6 +340,14 @@ namespace Godot.NativeInterop
 
         public static partial godot_variant* godotsharp_array_ptrw(ref godot_array p_self);
 
+        // struct.h
+
+        public static partial void godotsharp_struct_new(out godot_struct r_dest);
+
+        public static partial void godotsharp_struct_new_copy(out godot_struct r_dest, in godot_struct p_src);
+
+        public static partial godot_variant* godotsharp_struct_ptrw(ref godot_struct p_self);
+
         // dictionary.h
 
         public static partial void godotsharp_dictionary_new(out godot_dictionary r_dest);
@@ -378,6 +390,8 @@ namespace Godot.NativeInterop
         public static partial void godotsharp_callable_destroy(ref godot_callable p_self);
 
         public static partial void godotsharp_array_destroy(ref godot_array p_self);
+
+        public static partial void godotsharp_struct_destroy(ref godot_struct p_self);
 
         public static partial void godotsharp_dictionary_destroy(ref godot_dictionary p_self);
 
@@ -424,6 +438,42 @@ namespace Godot.NativeInterop
         public static partial void godotsharp_array_sort(ref godot_array p_self);
 
         public static partial void godotsharp_array_to_string(ref godot_array p_self, out godot_string r_str);
+
+        // Struct
+
+        public static partial int godotsharp_struct_add(ref godot_struct p_self, in godot_variant p_item);
+
+        public static partial int godotsharp_struct_add_range(ref godot_struct p_self, in godot_struct p_collection);
+
+        public static partial int godotsharp_struct_binary_search(ref godot_struct p_self, int p_index, int p_count, in godot_variant p_value);
+
+        public static partial void
+            godotsharp_struct_duplicate(ref godot_struct p_self, godot_bool p_deep, out godot_struct r_dest);
+
+        public static partial void godotsharp_struct_fill(ref godot_struct p_self, in godot_variant p_value);
+
+        public static partial int godotsharp_struct_index_of(ref godot_struct p_self, in godot_variant p_item, int p_index = 0);
+
+        public static partial void godotsharp_struct_insert(ref godot_struct p_self, int p_index, in godot_variant p_item);
+
+        public static partial int godotsharp_struct_last_index_of(ref godot_struct p_self, in godot_variant p_item, int p_index);
+
+        public static partial void godotsharp_struct_make_read_only(ref godot_struct p_self);
+
+        public static partial void godotsharp_struct_max(ref godot_struct p_self, out godot_variant r_value);
+
+        public static partial void godotsharp_struct_min(ref godot_struct p_self, out godot_variant r_value);
+
+        public static partial godot_bool godotsharp_struct_recursive_equal(ref godot_struct p_self, in godot_struct p_other);
+
+        public static partial void godotsharp_struct_remove_at(ref godot_struct p_self, int p_index);
+
+        public static partial Error godotsharp_struct_resize(ref godot_struct p_self, int p_new_size);
+
+        public static partial void godotsharp_struct_slice(ref godot_struct p_self, int p_start, int p_end,
+            int p_step, godot_bool p_deep, out godot_struct r_dest);
+
+        public static partial void godotsharp_struct_to_string(ref godot_struct p_self, out godot_string r_str);
 
         // Dictionary
 

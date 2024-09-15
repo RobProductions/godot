@@ -189,6 +189,9 @@ namespace Godot.NativeInterop
 
                         if (typeof(Collections.Array) == type)
                             return Variant.Type.Array;
+
+                        if (typeof(Collections.Struct) == type)
+                            return Variant.Type.Array;
                     }
 
                     break;

@@ -2331,6 +2331,18 @@ Variant::operator PackedVector4Array() const {
 	}
 }
 
+Variant::operator StructInfo() const {
+	if (is_struct()) {
+		//StructInfo info = operator StructInfo();
+		//return Array(&info);
+		//TODO: Confusion
+	}
+
+	//return _convert_array_from_variant<StructInfo>(*this);
+	Array va = operator Array();
+	return *va.get_struct_info();
+}
+
 /* helpers */
 
 Variant::operator Vector<::RID>() const {

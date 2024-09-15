@@ -76,6 +76,18 @@ namespace Godot.NativeInterop
             return ret;
         }
 
+        public static godot_struct godotsharp_struct_new()
+        {
+            godotsharp_struct_new(out godot_struct ret);
+            return ret;
+        }
+
+        public static godot_struct godotsharp_struct_new_copy(in godot_struct src)
+        {
+            godotsharp_struct_new_copy(out godot_struct ret, src);
+            return ret;
+        }
+
         public static godot_dictionary godotsharp_dictionary_new()
         {
             godotsharp_dictionary_new(out godot_dictionary ret);

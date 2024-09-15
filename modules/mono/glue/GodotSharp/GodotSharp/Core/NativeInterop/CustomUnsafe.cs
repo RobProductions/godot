@@ -152,6 +152,22 @@ public static class CustomUnsafe
         => ref *ReadOnlyRefAsPointer(in source);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe godot_struct* AsPointer(ref godot_struct value)
+        => value.GetUnsafeAddress();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe godot_struct* ReadOnlyRefAsPointer(in godot_struct value)
+        => value.GetUnsafeAddress();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ref godot_struct AsRef(godot_struct* source)
+        => ref *source;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ref godot_struct AsRef(in godot_struct source)
+        => ref *ReadOnlyRefAsPointer(in source);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe godot_dictionary* AsPointer(ref godot_dictionary value)
         => value.GetUnsafeAddress();
 

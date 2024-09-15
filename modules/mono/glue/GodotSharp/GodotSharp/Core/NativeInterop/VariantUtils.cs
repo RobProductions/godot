@@ -293,6 +293,20 @@ namespace Godot.NativeInterop
         public static godot_variant CreateFromArray<[MustBeVariant] T>(Array<T>? from)
             => from != null ? CreateFromArray((godot_array)((Collections.Array)from).NativeValue) : default;
 
+        public static godot_variant CreateFromStruct(godot_struct from)
+        {
+            NativeFuncs.godotsharp_variant_new_struct(out godot_variant ret, from);
+            return ret;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static godot_variant CreateFromStruct(Collections.Struct? from)
+            => from != null ? CreateFromStruct((godot_struct)from.NativeValue) : default;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static godot_variant CreateFromStruct<[MustBeVariant] T>(Struct<T>? from)
+            => from != null ? CreateFromStruct((godot_struct)((Collections.Struct)from).NativeValue) : default;
+
         public static godot_variant CreateFromDictionary(godot_dictionary from)
         {
             NativeFuncs.godotsharp_variant_new_dictionary(out godot_variant ret, from);
@@ -556,6 +570,15 @@ namespace Godot.NativeInterop
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Array<T> ConvertToArray<[MustBeVariant] T>(in godot_variant p_var)
             => Array<T>.CreateTakingOwnershipOfDisposableValue(ConvertToNativeArray(p_var));
+
+        // TODO: should perhaps convert array to struct if type == Type.Array like
+        // godot_array ConvertToNativeArray above
+        public static godot_struct ConvertToNativeStruct(in godot_variant p_var)
+            => NativeFuncs.godotsharp_variant_as_struct(p_var);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Struct<T> ConvertToStruct<[MustBeVariant] T>(in godot_variant p_var)
+            => Struct<T>.CreateTakingOwnershipOfDisposableValue(ConvertToNativeStruct(p_var));
 
         public static godot_dictionary ConvertToNativeDictionary(in godot_variant p_var)
             => p_var.Type == Variant.Type.Dictionary ?

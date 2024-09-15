@@ -122,6 +122,7 @@
     <Compile Include="Core\SignalAwaiter.cs" />
     <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Core\StringName.cs" />
+    <Compile Include="Core\Struct.cs" />
     <Compile Include="Core\Transform2D.cs" />
     <Compile Include="Core\Transform3D.cs" />
     <Compile Include="Core\Variant.cs" />

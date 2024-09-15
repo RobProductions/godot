@@ -2656,6 +2656,10 @@ Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterf
 	ERR_FAIL_COND_V_MSG(return_type->is_singleton, ERR_BUG,
 			"Method return type is a singleton: '" + p_itype.name + "." + p_imethod.name + "'.");
 
+	if (p_imethod.proxy_name == "ClassGetSignal") {
+		_log("YO: %s\n", p_imethod.name);
+	}
+
 	if (p_itype.api_type == ClassDB::API_CORE) {
 		ERR_FAIL_COND_V_MSG(return_type->api_type == ClassDB::API_EDITOR, ERR_BUG,
 				"Method '" + p_itype.name + "." + p_imethod.name + "' has return type '" + return_type->name +
@@ -3389,7 +3393,7 @@ const String BindingsGenerator::_get_generic_type_parameters(const TypeInterface
 	String params = "<";
 	for (const TypeReference &param_type : p_generic_type_parameters) {
 		const TypeInterface *param_itype = _get_type_or_singleton_or_null(param_type);
-		ERR_FAIL_NULL_V(param_itype, ""); // Parameter type not found
+		ERR_FAIL_NULL_V_MSG(param_itype, "", "Parameter type '" + param_type.cname + "' was not found.");
 
 		ERR_FAIL_COND_V_MSG(param_itype->is_singleton, "",
 				"Generic type parameter is a singleton: '" + param_itype->name + "'.");
@@ -4371,6 +4375,7 @@ void BindingsGenerator::_populate_builtin_type_interfaces() {
 	INSERT_STRUCT_TYPE(Vector4, Vector4)
 	INSERT_STRUCT_TYPE(Vector4i, Vector4I)
 	INSERT_STRUCT_TYPE(Projection, Projection)
+	INSERT_STRUCT_TYPE(StructInfo, StructInfo)
 
 #undef INSERT_STRUCT_TYPE
 
@@ -4606,6 +4611,8 @@ void BindingsGenerator::_populate_builtin_type_interfaces() {
 	INSERT_ARRAY(PackedVector2Array, godot_packed_vector2_array, Vector2);
 	INSERT_ARRAY(PackedVector3Array, godot_packed_vector3_array, Vector3);
 	INSERT_ARRAY(PackedVector4Array, godot_packed_vector4_array, Vector4);
+
+	INSERT_ARRAY(Struct, godot_struct, Struct)
 
 #undef INSERT_ARRAY
 

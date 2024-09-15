@@ -54,6 +54,12 @@ typedef struct {
 	uint8_t _dont_touch_that[GODOT_ARRAY_SIZE];
 } godot_array;
 
+#define GODOT_STRUCT_SIZE sizeof(void *)
+
+typedef struct {
+	uint8_t _dont_touch_that[GODOT_STRUCT_SIZE];
+} godot_struct;
+
 #define GODOT_DICTIONARY_SIZE sizeof(void *)
 
 typedef struct {
