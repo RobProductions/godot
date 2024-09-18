@@ -940,11 +940,11 @@ TypedArray<Dictionary> Object::_get_property_list_bind() const {
 	return convert_property_list(&lpi);
 }
 
-TypedArray<Struct<PropertyInfo>> Object::_get_property_list_as_structs_bind() const {
-	List<PropertyInfo> lpi;
-	get_property_list(&lpi);
-	return TypedArray<Struct<PropertyInfo>>(&lpi);
-}
+//TypedArray<Struct<PropertyInfo>> Object::_get_property_list_as_structs_bind() const {
+//	List<PropertyInfo> lpi;
+//	get_property_list(&lpi);
+//	return TypedArray<Struct<PropertyInfo>>(&lpi);
+//}
 
 TypedArray<Dictionary> Object::_get_method_list_bind() const {
 	List<MethodInfo> ml;
@@ -960,11 +960,11 @@ TypedArray<Dictionary> Object::_get_method_list_bind() const {
 	return ret;
 }
 
-TypedArray<Struct<MethodInfo>> Object::_get_method_list_as_structs_bind() const {
-	List<MethodInfo> ml;
-	get_method_list(&ml);
-	return TypedArray<Struct<MethodInfo>>(&ml);
-}
+//TypedArray<Struct<MethodInfo>> Object::_get_method_list_as_structs_bind() const {
+//	List<MethodInfo> ml;
+//	get_method_list(&ml);
+//	return TypedArray<Struct<MethodInfo>>(&ml);
+//}
 
 TypedArray<StringName> Object::_get_meta_list_bind() const {
 	TypedArray<StringName> _metaret;
@@ -1166,9 +1166,9 @@ void Object::_add_user_signal(const String &p_name, const Array &p_args) {
 	}
 }
 
-void Object::_add_user_signal_as_struct(const Struct<MethodInfo> &p_signal) {
-	add_user_signal(MethodInfo(p_signal));
-}
+//void Object::_add_user_signal_as_struct(const Struct<MethodInfo> &p_signal) {
+//	add_user_signal(MethodInfo(p_signal));
+//}
 
 TypedArray<Dictionary> Object::_get_signal_list() const {
 	List<MethodInfo> signal_list;
@@ -1182,11 +1182,11 @@ TypedArray<Dictionary> Object::_get_signal_list() const {
 	return ret;
 }
 
-TypedArray<Struct<MethodInfo>> Object::_get_signal_list_as_structs() const {
-	List<MethodInfo> signal_list;
-	get_signal_list(&signal_list);
-	return TypedArray<Struct<MethodInfo>>(&signal_list);
-}
+//TypedArray<Struct<MethodInfo>> Object::_get_signal_list_as_structs() const {
+//	List<MethodInfo> signal_list;
+//	get_signal_list(&signal_list);
+//	return TypedArray<Struct<MethodInfo>>(&signal_list);
+//}
 
 TypedArray<Dictionary> Object::_get_signal_connection_list(const StringName &p_signal) const {
 	List<Connection> conns;
@@ -1203,11 +1203,11 @@ TypedArray<Dictionary> Object::_get_signal_connection_list(const StringName &p_s
 	return ret;
 }
 
-TypedArray<Struct<Object::Connection>> Object::_get_signal_connection_list_as_structs(const StringName &p_signal) const {
-	List<Connection> conns;
-	get_all_signal_connections(&conns);
-	return TypedArray<Struct<Connection>>(&conns);
-}
+//TypedArray<Struct<Object::Connection>> Object::_get_signal_connection_list_as_structs(const StringName &p_signal) const {
+//	List<Connection> conns;
+//	get_all_signal_connections(&conns);
+//	return TypedArray<Struct<Connection>>(&conns);
+//}
 
 TypedArray<Dictionary> Object::_get_incoming_connections() const {
 	TypedArray<Dictionary> ret;
@@ -1218,9 +1218,9 @@ TypedArray<Dictionary> Object::_get_incoming_connections() const {
 	return ret;
 }
 
-TypedArray<Struct<Object::Connection>> Object::_get_incoming_connections_as_structs() const {
-	return TypedArray<Struct<Connection>>(&connections);
-}
+//TypedArray<Struct<Object::Connection>> Object::_get_incoming_connections_as_structs() const {
+//	return TypedArray<Struct<Connection>>(&connections);
+//}
 
 bool Object::has_signal(const StringName &p_name) const {
 	if (!script.is_null()) {
@@ -1578,9 +1578,9 @@ void Object::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_indexed", "property_path", "value"), &Object::_set_indexed_bind);
 	ClassDB::bind_method(D_METHOD("get_indexed", "property_path"), &Object::_get_indexed_bind);
 	ClassDB::bind_method(D_METHOD("get_property_list"), &Object::_get_property_list_bind);
-	ClassDB::bind_method(D_METHOD("get_property_list_as_structs"), &Object::_get_property_list_as_structs_bind);
+	//ClassDB::bind_method(D_METHOD("get_property_list_as_structs"), &Object::_get_property_list_as_structs_bind);
 	ClassDB::bind_method(D_METHOD("get_method_list"), &Object::_get_method_list_bind);
-	ClassDB::bind_method(D_METHOD("get_method_list_as_structs"), &Object::_get_method_list_as_structs_bind);
+	//ClassDB::bind_method(D_METHOD("get_method_list_as_structs"), &Object::_get_method_list_as_structs_bind);
 	ClassDB::bind_method(D_METHOD("property_can_revert", "property"), &Object::property_can_revert);
 	ClassDB::bind_method(D_METHOD("property_get_revert", "property"), &Object::property_get_revert);
 	ClassDB::bind_method(D_METHOD("notification", "what", "reversed"), &Object::notification, DEFVAL(false));
@@ -1597,7 +1597,7 @@ void Object::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_meta_list"), &Object::_get_meta_list_bind);
 
 	ClassDB::bind_method(D_METHOD("add_user_signal", "signal", "arguments"), &Object::_add_user_signal, DEFVAL(Array()));
-	ClassDB::bind_method(D_METHOD("add_user_signal_as_struct", "signal"), &Object::_add_user_signal_as_struct);
+	//ClassDB::bind_method(D_METHOD("add_user_signal_as_struct", "signal"), &Object::_add_user_signal_as_struct);
 	ClassDB::bind_method(D_METHOD("has_user_signal", "signal"), &Object::_has_user_signal);
 	ClassDB::bind_method(D_METHOD("remove_user_signal", "signal"), &Object::_remove_user_signal);
 
@@ -1635,11 +1635,11 @@ void Object::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("has_signal", "signal"), &Object::has_signal);
 	ClassDB::bind_method(D_METHOD("get_signal_list"), &Object::_get_signal_list);
-	ClassDB::bind_method(D_METHOD("get_signal_list_as_structs"), &Object::_get_signal_list_as_structs);
+	//ClassDB::bind_method(D_METHOD("get_signal_list_as_structs"), &Object::_get_signal_list_as_structs);
 	ClassDB::bind_method(D_METHOD("get_signal_connection_list", "signal"), &Object::_get_signal_connection_list);
-	ClassDB::bind_method(D_METHOD("get_signal_connection_list_as_structs", "signal"), &Object::_get_signal_connection_list_as_structs);
+	//ClassDB::bind_method(D_METHOD("get_signal_connection_list_as_structs", "signal"), &Object::_get_signal_connection_list_as_structs);
 	ClassDB::bind_method(D_METHOD("get_incoming_connections"), &Object::_get_incoming_connections);
-	ClassDB::bind_method(D_METHOD("get_incoming_connections_as_structs"), &Object::_get_incoming_connections_as_structs);
+	//ClassDB::bind_method(D_METHOD("get_incoming_connections_as_structs"), &Object::_get_incoming_connections_as_structs);
 
 	ClassDB::bind_method(D_METHOD("connect", "signal", "callable", "flags"), &Object::connect, DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("disconnect", "signal", "callable"), &Object::disconnect);

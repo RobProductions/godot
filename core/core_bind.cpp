@@ -1433,14 +1433,14 @@ Dictionary ClassDB::class_get_signal(const StringName &p_class, const StringName
 	}
 }
 
-Struct<MethodInfo> ClassDB::class_get_signal_as_struct(const StringName &p_class, const StringName &p_signal) const {
-	MethodInfo signal;
-	if (::ClassDB::get_signal(p_class, p_signal, &signal)) {
-		return Struct<MethodInfo>(signal);
-	} else {
-		return Struct<MethodInfo>();
-	}
-}
+//Struct<MethodInfo> ClassDB::class_get_signal_as_struct(const StringName &p_class, const StringName &p_signal) const {
+//	MethodInfo signal;
+//	if (::ClassDB::get_signal(p_class, p_signal, &signal)) {
+//		return Struct<MethodInfo>(signal);
+//	} else {
+//		return Struct<MethodInfo>();
+//	}
+//}
 
 TypedArray<Dictionary> ClassDB::class_get_signal_list(const StringName &p_class, bool p_no_inheritance) const {
 	List<MethodInfo> signals;
@@ -1454,11 +1454,11 @@ TypedArray<Dictionary> ClassDB::class_get_signal_list(const StringName &p_class,
 	return ret;
 }
 
-TypedArray<Struct<MethodInfo>> ClassDB::class_get_signal_list_as_structs(const StringName &p_class, bool p_no_inheritance) const {
-	List<MethodInfo> signals;
-	::ClassDB::get_signal_list(p_class, &signals, p_no_inheritance);
-	return TypedArray<Struct<MethodInfo>>(&signals);
-}
+//TypedArray<Struct<MethodInfo>> ClassDB::class_get_signal_list_as_structs(const StringName &p_class, bool p_no_inheritance) const {
+//	List<MethodInfo> signals;
+//	::ClassDB::get_signal_list(p_class, &signals, p_no_inheritance);
+//	return TypedArray<Struct<MethodInfo>>(&signals);
+//}
 
 TypedArray<Dictionary> ClassDB::class_get_property_list(const StringName &p_class, bool p_no_inheritance) const {
 	List<PropertyInfo> plist;
@@ -1471,11 +1471,11 @@ TypedArray<Dictionary> ClassDB::class_get_property_list(const StringName &p_clas
 	return ret;
 }
 
-TypedArray<Struct<PropertyInfo>> ClassDB::class_get_property_list_as_structs(const StringName &p_class, bool p_no_inheritance) const {
-	List<PropertyInfo> plist;
-	::ClassDB::get_property_list(p_class, &plist, p_no_inheritance);
-	return TypedArray<Struct<PropertyInfo>>(&plist);
-}
+//TypedArray<Struct<PropertyInfo>> ClassDB::class_get_property_list_as_structs(const StringName &p_class, bool p_no_inheritance) const {
+//	List<PropertyInfo> plist;
+//	::ClassDB::get_property_list(p_class, &plist, p_no_inheritance);
+//	return TypedArray<Struct<PropertyInfo>>(&plist);
+//}
 
 StringName ClassDB::class_get_property_getter(const StringName &p_class, const StringName &p_property) {
 	return ::ClassDB::get_property_getter(p_class, p_property);
@@ -1537,11 +1537,11 @@ TypedArray<Dictionary> ClassDB::class_get_method_list(const StringName &p_class,
 	return ret;
 }
 
-TypedArray<Struct<MethodInfo>> ClassDB::class_get_method_list_as_structs(const StringName &p_class, bool p_no_inheritance) const {
-	List<MethodInfo> methods;
-	::ClassDB::get_method_list(p_class, &methods, p_no_inheritance);
-	return TypedArray<Struct<MethodInfo>>(&methods);
-}
+//TypedArray<Struct<MethodInfo>> ClassDB::class_get_method_list_as_structs(const StringName &p_class, bool p_no_inheritance) const {
+//	List<MethodInfo> methods;
+//	::ClassDB::get_method_list(p_class, &methods, p_no_inheritance);
+//	return TypedArray<Struct<MethodInfo>>(&methods);
+//}
 
 Variant ClassDB::class_call_static_method(const Variant **p_arguments, int p_argcount, Callable::CallError &r_call_error) {
 	if (p_argcount < 2) {
@@ -1679,9 +1679,9 @@ void ClassDB::get_argument_options(const StringName &p_function, int p_idx, List
 	if (p_idx == 0) {
 		first_argument_is_class = (pf == "get_inheriters_from_class" || pf == "get_parent_class" ||
 				pf == "class_exists" || pf == "can_instantiate" || pf == "instantiate" ||
-				pf == "class_has_signal" || pf == "class_get_signal" || pf == "class_get_signal_list" || pf == "class_get_signal_list_as_struct" ||
-				pf == "class_get_property_list" || pf == "class_get_property_list_as_structs" || pf == "class_get_property" || pf == "class_set_property" ||
-				pf == "class_has_method" || pf == "class_get_method_list" || pf == "class_get_method_list_as_structs" ||
+				pf == "class_has_signal" || pf == "class_get_signal" || pf == "class_get_signal_list" ||
+				pf == "class_get_property_list" || pf == "class_get_property" || pf == "class_set_property" ||
+				pf == "class_has_method" || pf == "class_get_method_list" ||
 				pf == "class_get_integer_constant_list" || pf == "class_has_integer_constant" || pf == "class_get_integer_constant" ||
 				pf == "class_has_enum" || pf == "class_get_enum_list" || pf == "class_get_enum_constants" || pf == "class_get_integer_constant_enum" ||
 				pf == "is_class_enabled" || pf == "is_class_enum_bitfield");
@@ -1707,12 +1707,12 @@ void ClassDB::_bind_methods() {
 
 	::ClassDB::bind_method(D_METHOD("class_has_signal", "class", "signal"), &ClassDB::class_has_signal);
 	::ClassDB::bind_method(D_METHOD("class_get_signal", "class", "signal"), &ClassDB::class_get_signal);
-	::ClassDB::bind_method(D_METHOD("class_get_signal_as_struct", "class", "signal"), &ClassDB::class_get_signal_as_struct);
+	//::ClassDB::bind_method(D_METHOD("class_get_signal_as_struct", "class", "signal"), &ClassDB::class_get_signal_as_struct);
 	::ClassDB::bind_method(D_METHOD("class_get_signal_list", "class", "no_inheritance"), &ClassDB::class_get_signal_list, DEFVAL(false));
-	::ClassDB::bind_method(D_METHOD("class_get_signal_list_as_structs", "class", "no_inheritance"), &ClassDB::class_get_signal_list_as_structs, DEFVAL(false));
+	//::ClassDB::bind_method(D_METHOD("class_get_signal_list_as_structs", "class", "no_inheritance"), &ClassDB::class_get_signal_list_as_structs, DEFVAL(false));
 
 	::ClassDB::bind_method(D_METHOD("class_get_property_list", "class", "no_inheritance"), &ClassDB::class_get_property_list, DEFVAL(false));
-	::ClassDB::bind_method(D_METHOD("class_get_property_list_as_structs", "class", "no_inheritance"), &ClassDB::class_get_property_list_as_structs, DEFVAL(false));
+	//::ClassDB::bind_method(D_METHOD("class_get_property_list_as_structs", "class", "no_inheritance"), &ClassDB::class_get_property_list_as_structs, DEFVAL(false));
 	::ClassDB::bind_method(D_METHOD("class_get_property_getter", "class", "property"), &ClassDB::class_get_property_getter);
 	::ClassDB::bind_method(D_METHOD("class_get_property_setter", "class", "property"), &ClassDB::class_get_property_setter);
 	::ClassDB::bind_method(D_METHOD("class_get_property", "object", "property"), &ClassDB::class_get_property);
@@ -1725,7 +1725,7 @@ void ClassDB::_bind_methods() {
 	::ClassDB::bind_method(D_METHOD("class_get_method_argument_count", "class", "method", "no_inheritance"), &ClassDB::class_get_method_argument_count, DEFVAL(false));
 
 	::ClassDB::bind_method(D_METHOD("class_get_method_list", "class", "no_inheritance"), &ClassDB::class_get_method_list, DEFVAL(false));
-	::ClassDB::bind_method(D_METHOD("class_get_method_list_as_structs", "class", "no_inheritance"), &ClassDB::class_get_method_list_as_structs, DEFVAL(false));
+	//::ClassDB::bind_method(D_METHOD("class_get_method_list_as_structs", "class", "no_inheritance"), &ClassDB::class_get_method_list_as_structs, DEFVAL(false));
 
 	::ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "class_call_static_method", &ClassDB::class_call_static_method, MethodInfo("class_call_static_method", PropertyInfo(Variant::STRING_NAME, "class"), PropertyInfo(Variant::STRING_NAME, "method")));
 

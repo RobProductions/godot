@@ -183,51 +183,51 @@
 
 namespace TestStruct {
 
-TEST_CASE("[Struct] PropertyInfo") {
-	Node *my_node = memnew(Node);
-
-	List<PropertyInfo> list;
-	my_node->get_property_list(&list);
-	PropertyInfo info = list.get(0);
-
-	TypedArray<Struct<PropertyInfo>> property_list = my_node->call(SNAME("get_property_list_as_structs"));
-	Struct<PropertyInfo> prop = property_list[0];
-
-	SUBCASE("Equality") {
-		CHECK_EQ(info.name, prop.get_member<struct PropertyInfo::name>());
-		CHECK_EQ(info.class_name, prop.get_member<struct PropertyInfo::class_name>());
-		CHECK_EQ(info.type, prop.get_member<struct PropertyInfo::type>());
-		CHECK_EQ(info.hint, prop.get_member<struct PropertyInfo::hint>());
-		CHECK_EQ(info.hint_string, prop.get_member<struct PropertyInfo::hint_string>());
-		CHECK_EQ(info.usage, prop.get_member<struct PropertyInfo::usage>());
-	}
-
-	SUBCASE("Duplication") {
-		Variant var = prop;
-		CHECK_EQ(var.get_type(), Variant::ARRAY);
-		Variant var_dup = prop.duplicate();
-		CHECK_EQ(var_dup.get_type(), Variant::ARRAY);
-		CHECK_EQ(var, var_dup);
-	}
-
-	SUBCASE("Setget Named") {
-		Variant variant_prop = prop;
-		bool valid = false;
-		variant_prop.set_named(SNAME("name"), SNAME("Changed"), valid);
-		CHECK_EQ(valid, true);
-		Variant val = variant_prop.get_named(SNAME("name"), valid);
-		CHECK_EQ(valid, true);
-		CHECK_EQ((StringName)val, SNAME("Changed"));
-
-		val = variant_prop.get_named(SNAME("oops"), valid);
-		CHECK_EQ(valid, false);
-		CHECK_EQ(val, Variant());
-
-		variant_prop.set_named(SNAME("oops"), SNAME("oh no"), valid);
-		CHECK_EQ(valid, false);
-	}
-	memdelete(my_node);
-}
+//TEST_CASE("[Struct] PropertyInfo") {
+//	Node *my_node = memnew(Node);
+//
+//	List<PropertyInfo> list;
+//	my_node->get_property_list(&list);
+//	PropertyInfo info = list.get(0);
+//
+//	TypedArray<Struct<PropertyInfo>> property_list = my_node->call(SNAME("get_property_list_as_structs"));
+//	Struct<PropertyInfo> prop = property_list[0];
+//
+//	SUBCASE("Equality") {
+//		CHECK_EQ(info.name, prop.get_member<struct PropertyInfo::name>());
+//		CHECK_EQ(info.class_name, prop.get_member<struct PropertyInfo::class_name>());
+//		CHECK_EQ(info.type, prop.get_member<struct PropertyInfo::type>());
+//		CHECK_EQ(info.hint, prop.get_member<struct PropertyInfo::hint>());
+//		CHECK_EQ(info.hint_string, prop.get_member<struct PropertyInfo::hint_string>());
+//		CHECK_EQ(info.usage, prop.get_member<struct PropertyInfo::usage>());
+//	}
+//
+//	SUBCASE("Duplication") {
+//		Variant var = prop;
+//		CHECK_EQ(var.get_type(), Variant::ARRAY);
+//		Variant var_dup = prop.duplicate();
+//		CHECK_EQ(var_dup.get_type(), Variant::ARRAY);
+//		CHECK_EQ(var, var_dup);
+//	}
+//
+//	SUBCASE("Setget Named") {
+//		Variant variant_prop = prop;
+//		bool valid = false;
+//		variant_prop.set_named(SNAME("name"), SNAME("Changed"), valid);
+//		CHECK_EQ(valid, true);
+//		Variant val = variant_prop.get_named(SNAME("name"), valid);
+//		CHECK_EQ(valid, true);
+//		CHECK_EQ((StringName)val, SNAME("Changed"));
+//
+//		val = variant_prop.get_named(SNAME("oops"), valid);
+//		CHECK_EQ(valid, false);
+//		CHECK_EQ(val, Variant());
+//
+//		variant_prop.set_named(SNAME("oops"), SNAME("oh no"), valid);
+//		CHECK_EQ(valid, false);
+//	}
+//	memdelete(my_node);
+//}
 
 TEST_CASE("[Struct] Validation") {
 	struct NamedInt {

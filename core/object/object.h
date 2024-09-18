@@ -407,16 +407,16 @@ private:
 	mutable const StringName *_class_name_ptr = nullptr;
 
 	void _add_user_signal(const String &p_name, const Array &p_args = Array());
-	void _add_user_signal_as_struct(const Struct<MethodInfo> &p_signal);
+	//void _add_user_signal_as_struct(const Struct<MethodInfo> &p_signal);
 	bool _has_user_signal(const StringName &p_name) const;
 	void _remove_user_signal(const StringName &p_name);
 	Error _emit_signal(const Variant **p_args, int p_argcount, Callable::CallError &r_error);
 	TypedArray<Dictionary> _get_signal_list() const;
 	TypedArray<Dictionary> _get_signal_connection_list(const StringName &p_signal) const;
 	TypedArray<Dictionary> _get_incoming_connections() const;
-	TypedArray<Struct<MethodInfo>> _get_signal_list_as_structs() const;
-	TypedArray<Struct<Connection>> _get_signal_connection_list_as_structs(const StringName &p_signal) const;
-	TypedArray<Struct<Connection>> _get_incoming_connections_as_structs() const;
+	//TypedArray<Struct<MethodInfo>> _get_signal_list_as_structs() const;
+	//TypedArray<Struct<Connection>> _get_signal_connection_list_as_structs(const StringName &p_signal) const;
+	//TypedArray<Struct<Connection>> _get_incoming_connections_as_structs() const;
 	void _set_bind(const StringName &p_set, const Variant &p_value);
 	Variant _get_bind(const StringName &p_name) const;
 	void _set_indexed_bind(const NodePath &p_name, const Variant &p_value);
@@ -521,9 +521,9 @@ protected:
 
 	TypedArray<StringName> _get_meta_list_bind() const;
 	TypedArray<Dictionary> _get_property_list_bind() const;
-	TypedArray<Struct<PropertyInfo>> _get_property_list_as_structs_bind() const;
+	//TypedArray<Struct<PropertyInfo>> _get_property_list_as_structs_bind() const;
 	TypedArray<Dictionary> _get_method_list_bind() const;
-	TypedArray<Struct<MethodInfo>> _get_method_list_as_structs_bind() const;
+	//TypedArray<Struct<MethodInfo>> _get_method_list_as_structs_bind() const;
 
 	void _clear_internal_resource_paths(const Variant &p_var);
 
