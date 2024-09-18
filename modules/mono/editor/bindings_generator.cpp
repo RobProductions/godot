@@ -3389,7 +3389,7 @@ const String BindingsGenerator::_get_generic_type_parameters(const TypeInterface
 	String params = "<";
 	for (const TypeReference &param_type : p_generic_type_parameters) {
 		const TypeInterface *param_itype = _get_type_or_singleton_or_null(param_type);
-		ERR_FAIL_NULL_V(param_itype, ""); // Parameter type not found
+		ERR_FAIL_NULL_V_MSG(param_itype, "", "Parameter type '" + param_type.cname + "' was not found.");
 
 		ERR_FAIL_COND_V_MSG(param_itype->is_singleton, "",
 				"Generic type parameter is a singleton: '" + param_itype->name + "'.");
@@ -4377,6 +4377,8 @@ void BindingsGenerator::_populate_builtin_type_interfaces() {
 	INSERT_STRUCT_TYPE(Vector4, Vector4)
 	INSERT_STRUCT_TYPE(Vector4i, Vector4I)
 	INSERT_STRUCT_TYPE(Projection, Projection)
+	INSERT_STRUCT_TYPE(MethodInfo, MethodInfo)
+	INSERT_STRUCT_TYPE(PropertyInfo, PropertyInfo)
 
 #undef INSERT_STRUCT_TYPE
 
