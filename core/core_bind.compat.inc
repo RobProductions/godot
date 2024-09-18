@@ -29,7 +29,6 @@
 /**************************************************************************/
 
 #ifndef DISABLE_DEPRECATED
-#include "core_bind.h"
 
 namespace core_bind {
 
@@ -53,67 +52,6 @@ void OS::_bind_compatibility_methods() {
 	ClassDB::bind_compatibility_method(D_METHOD("execute_with_pipe", "path", "arguments"), &OS::_execute_with_pipe_bind_compat_94434);
 }
 
-// ClassDB
-
-namespace special {
-
-Dictionary ClassDB::class_get_signal_compat_82198(const StringName &p_class, const StringName &p_signal) const {
-	MethodInfo signal;
-	if (::ClassDB::get_signal(p_class, p_signal, &signal)) {
-		return signal.operator Dictionary();
-	} else {
-		return Dictionary();
-	}
-}
-
-TypedArray<Dictionary> ClassDB::class_get_signal_list_compat_82198(const StringName &p_class, bool p_no_inheritance) const {
-	List<MethodInfo> signals;
-	::ClassDB::get_signal_list(p_class, &signals, p_no_inheritance);
-	TypedArray<Dictionary> ret;
-
-	for (const MethodInfo &E : signals) {
-		ret.push_back(E.operator Dictionary());
-	}
-
-	return ret;
-}
-
-TypedArray<Dictionary> ClassDB::class_get_property_list_compat_82198(const StringName &p_class, bool p_no_inheritance) const {
-	List<PropertyInfo> plist;
-	::ClassDB::get_property_list(p_class, &plist, p_no_inheritance);
-	TypedArray<Dictionary> ret;
-	for (const PropertyInfo &E : plist) {
-		ret.push_back(E.operator Dictionary());
-	}
-
-	return ret;
-}
-
-TypedArray<Dictionary> ClassDB::class_get_method_list_compat_82198(const StringName &p_class, bool p_no_inheritance) const {
-	List<MethodInfo> methods;
-	::ClassDB::get_method_list(p_class, &methods, p_no_inheritance);
-	TypedArray<Dictionary> ret;
-
-	for (const MethodInfo &E : methods) {
-#ifdef DEBUG_METHODS_ENABLED
-		ret.push_back(E.operator Dictionary());
-#else
-		Dictionary dict;
-		dict["name"] = E.name;
-		ret.push_back(dict);
-#endif
-	}
-
-	return ret;
-}
-
-void ClassDB::_bind_compatibility_methods() {
-	::ClassDB::bind_compatibility_method(D_METHOD("class_get_signal", "class", "signal"), &ClassDB::class_get_signal_compat_82198);
-	::ClassDB::bind_compatibility_method(D_METHOD("class_get_signal_list", "class", "no_inheritance"), &ClassDB::class_get_signal_list_compat_82198, DEFVAL(false));
-	::ClassDB::bind_compatibility_method(D_METHOD("class_get_property_list", "class", "no_inheritance"), &ClassDB::class_get_property_list_compat_82198, DEFVAL(false));
-	::ClassDB::bind_compatibility_method(D_METHOD("class_get_method_list", "class", "no_inheritance"), &ClassDB::class_get_method_list_compat_82198, DEFVAL(false));
-}
-} // namespace special
 } // namespace core_bind
 
 #endif // DISABLE_DEPRECATED

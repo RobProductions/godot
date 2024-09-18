@@ -445,7 +445,6 @@ class ClassDB : public Object {
 
 protected:
 	static void _bind_methods();
-	static void _bind_compatibility_methods();
 
 public:
 	PackedStringArray get_class_list() const;
@@ -495,13 +494,6 @@ public:
 	bool class_has_struct(const StringName &p_class, const StringName &p_struct, bool p_no_inheritance = false) const;
 	TypedArray<Dictionary> class_get_struct_list(const StringName &p_class, bool p_no_inheritance = false) const;
 	TypedArray<Dictionary> class_get_struct_members(const StringName &p_class, const StringName &p_struct) const;
-
-#ifndef DISABLE_DEPRECATED
-	Dictionary class_get_signal_compat_82198(const StringName &p_class, const StringName &p_signal) const;
-	TypedArray<Dictionary> class_get_signal_list_compat_82198(const StringName &p_class, bool p_no_inheritance = false) const;
-	TypedArray<Dictionary> class_get_property_list_compat_82198(const StringName &p_class, bool p_no_inheritance = false) const;
-	TypedArray<Dictionary> class_get_method_list_compat_82198(const StringName &p_class, bool p_no_inheritance = false) const;
-#endif
 
 #ifdef TOOLS_ENABLED
 	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;

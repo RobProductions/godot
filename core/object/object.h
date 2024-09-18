@@ -417,12 +417,6 @@ private:
 	TypedArray<Struct<MethodInfo>> _get_signal_list_as_structs() const;
 	TypedArray<Struct<Connection>> _get_signal_connection_list_as_structs(const StringName &p_signal) const;
 	TypedArray<Struct<Connection>> _get_incoming_connections_as_structs() const;
-#ifndef DISABLE_DEPRECATED
-	void _add_user_signal_compat_82198(const String &p_name, const Array &p_args = Array());
-	TypedArray<Dictionary> _get_signal_list_compat_82198() const;
-	TypedArray<Dictionary> _get_signal_connection_list_compat_82198(const StringName &p_signal) const;
-	TypedArray<Dictionary> _get_incoming_connections_compat_82198() const;
-#endif
 	void _set_bind(const StringName &p_set, const Variant &p_value);
 	Variant _get_bind(const StringName &p_name) const;
 	void _set_indexed_bind(const NodePath &p_name, const Variant &p_value);
@@ -530,10 +524,6 @@ protected:
 	TypedArray<Struct<PropertyInfo>> _get_property_list_as_structs_bind() const;
 	TypedArray<Dictionary> _get_method_list_bind() const;
 	TypedArray<Struct<MethodInfo>> _get_method_list_as_structs_bind() const;
-#ifndef DISABLE_DEPRECATED
-	TypedArray<Dictionary> _get_property_list_bind_compat_82198() const;
-	TypedArray<Dictionary> _get_method_list_bind_compat_82198() const;
-#endif
 
 	void _clear_internal_resource_paths(const Variant &p_var);
 

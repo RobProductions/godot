@@ -51,10 +51,11 @@ struct ContainerTypeValidate {
 	Ref<Script> script;
 
 	bool is_array_of_structs = false;
-	const StructInfo *struct_info; // TODO: if is_array_of_structs == true, then require struct_info != nullptr, but not sure the best way to enforce this.
+	const StructInfo *struct_info = nullptr; // TODO: if is_array_of_structs == true, then require struct_info != nullptr, but not sure the best way to enforce this.
 	const char *where = "container";
 
-	ContainerTypeValidate(const Variant::Type p_type = Variant::NIL, const StringName &p_class_name = StringName(), const Ref<Script> &p_script = Ref<Script>(), const char *p_where = "container") {
+	ContainerTypeValidate(){};
+	ContainerTypeValidate(const Variant::Type p_type, const StringName &p_class_name, const Ref<Script> &p_script, const char *p_where = "container") {
 		type = p_type;
 		class_name = p_class_name;
 		script = p_script;
