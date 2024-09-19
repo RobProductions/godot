@@ -4377,8 +4377,8 @@ void BindingsGenerator::_populate_builtin_type_interfaces() {
 	INSERT_STRUCT_TYPE(Vector4, Vector4)
 	INSERT_STRUCT_TYPE(Vector4i, Vector4I)
 	INSERT_STRUCT_TYPE(Projection, Projection)
-	INSERT_STRUCT_TYPE(MethodInfo, MethodInfo)
-	INSERT_STRUCT_TYPE(PropertyInfo, PropertyInfo)
+	//INSERT_STRUCT_TYPE(MethodInfo, MethodInfo)
+	//INSERT_STRUCT_TYPE(PropertyInfo, PropertyInfo)
 
 #undef INSERT_STRUCT_TYPE
 
