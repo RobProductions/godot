@@ -144,6 +144,7 @@ private:
 #endif
 	bool paused = false;
 	bool suspended = false;
+	bool edit_mode = false;
 
 	HashMap<StringName, Group> group_map;
 	bool _quit = false;
@@ -346,6 +347,8 @@ public:
 	bool is_paused() const;
 	void set_suspend(bool p_enabled);
 	bool is_suspended() const;
+	void set_edit_mode(bool p_enabled);
+	bool is_edit_mode() const;
 
 #ifdef DEBUG_ENABLED
 	void set_debug_collisions_hint(bool p_enabled);

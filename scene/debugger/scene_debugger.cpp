@@ -132,10 +132,14 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 		ERR_FAIL_COND_V(p_args.is_empty(), ERR_INVALID_DATA);
 		bool suspended = p_args[0];
 		scene_tree->set_suspend(suspended);
-		runtime_node_select->_selection_set_visible(suspended);
 
 	} else if (p_msg == "next_frame") {
 		_next_frame();
+	} else if (p_msg == "runtime_edit_mode_changed") {
+		ERR_FAIL_COND_V(p_args.is_empty(), ERR_INVALID_DATA);
+		bool edit_mode_active = p_args[0];
+		scene_tree->set_edit_mode(edit_mode_active);
+		runtime_node_select->_selection_set_visible(edit_mode_active);
 
 	} else if (p_msg == "override_camera_2D:set") { // Camera
 		ERR_FAIL_COND_V(p_args.is_empty(), ERR_INVALID_DATA);
@@ -1254,9 +1258,10 @@ void RuntimeNodeSelect::_select_set_mode(SelectMode p_mode) {
 }
 
 void RuntimeNodeSelect::_root_window_input(const Ref<InputEvent> &p_event) {
-	if (!SceneTree::get_singleton()->is_suspended() || selection_list->is_visible()) {
+	if (!SceneTree::get_singleton()->is_edit_mode() || selection_list->is_visible()) {
 		return;
 	}
+	_update_selection();
 
 	Ref<InputEventMouseButton> b = p_event;
 	if (!b.is_valid() || !b->is_pressed()) {

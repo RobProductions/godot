@@ -56,6 +56,7 @@ public:
 
 	void set_node_type(int p_type);
 	void set_select_mode(int p_mode);
+	void set_edit_mode(bool p_enabled);
 
 	virtual void setup_session(int p_session_id) override;
 
@@ -73,6 +74,7 @@ private:
 	Button *suspend_button = nullptr;
 	Button *next_frame_button = nullptr;
 
+	Button *edit_mode_button = nullptr;
 	Button *node_type_button[RuntimeNodeSelect::NODE_TYPE_MAX];
 	Button *select_mode_button[RuntimeNodeSelect::SELECT_MODE_MAX];
 
@@ -86,6 +88,7 @@ private:
 
 	void _node_type_pressed(int p_option);
 	void _select_mode_pressed(int p_option);
+	void _edit_mode_toggled(bool p_pressed);
 
 protected:
 	void _notification(int p_what);

@@ -101,6 +101,17 @@ void GameEditorDebugger::set_select_mode(int p_mode) {
 	}
 }
 
+void GameEditorDebugger::set_edit_mode(bool p_enabled) {
+	Array message;
+	message.append(p_enabled);
+
+	for (Ref<EditorDebuggerSession> &I : sessions) {
+		if (I->is_active()) {
+			I->send_message("scene:runtime_edit_mode_changed", message);
+		}
+	}
+}
+
 void GameEditorDebugger::setup_session(int p_session_id) {
 	Ref<EditorDebuggerSession> session = get_session(p_session_id);
 	ERR_FAIL_COND(session.is_null());
@@ -149,6 +160,10 @@ void GameEditor::_suspend_button_toggled(bool p_pressed) {
 	debugger->set_suspend(p_pressed);
 }
 
+void GameEditor::_edit_mode_toggled(bool p_pressed) {
+	debugger->set_edit_mode(p_pressed);
+}
+
 void GameEditor::_node_type_pressed(int p_option) {
 	RuntimeNodeSelect::NodeType type = (RuntimeNodeSelect::NodeType)p_option;
 	for (int i = 0; i < RuntimeNodeSelect::NODE_TYPE_MAX; i++) {
@@ -173,6 +188,7 @@ void GameEditor::_notification(int p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
 			suspend_button->set_icon(get_editor_theme_icon(SNAME("Pause")));
 			next_frame_button->set_icon(get_editor_theme_icon(SNAME("NextFrame")));
+			edit_mode_button->set_icon(get_editor_theme_icon(SNAME("Edit")));
 
 			node_type_button[RuntimeNodeSelect::NODE_TYPE_2D]->set_icon(get_editor_theme_icon(SNAME("2DNodes")));
 			node_type_button[RuntimeNodeSelect::NODE_TYPE_3D]->set_icon(get_editor_theme_icon(SNAME("Node3D")));
@@ -232,6 +248,15 @@ GameEditor::GameEditor(Ref<GameEditorDebugger> p_debugger) {
 	node_type_button[RuntimeNodeSelect::NODE_TYPE_3D]->set_theme_type_variation("FlatButton");
 	node_type_button[RuntimeNodeSelect::NODE_TYPE_3D]->connect(SceneStringName(pressed), callable_mp(this, &GameEditor::_node_type_pressed).bind(RuntimeNodeSelect::NODE_TYPE_3D));
 	node_type_button[RuntimeNodeSelect::NODE_TYPE_3D]->set_tooltip_text(TTR("Select Node3Ds"));
+
+	main_menu_hbox->add_child(memnew(VSeparator));
+
+	edit_mode_button = memnew(Button);
+	main_menu_hbox->add_child(edit_mode_button);
+	edit_mode_button->set_toggle_mode(true);
+	edit_mode_button->set_theme_type_variation("FlatButton");
+	edit_mode_button->connect(SceneStringName(toggled), callable_mp(this, &GameEditor::_edit_mode_toggled));
+	edit_mode_button->set_tooltip_text(TTR("Edit Mode"));
 
 	main_menu_hbox->add_child(memnew(VSeparator));
 

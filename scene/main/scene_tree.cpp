@@ -977,7 +977,7 @@ void SceneTree::set_suspend(bool p_enabled) {
 	suspended = p_enabled;
 
 	Engine::get_singleton()->set_suspend(p_enabled);
-	Input::get_singleton()->set_suspend(p_enabled);
+	Input::get_singleton()->set_suspend(suspended || edit_mode);
 
 #ifndef _3D_DISABLED
 	PhysicsServer3D::get_singleton()->set_active(!p_enabled && !paused);
@@ -990,6 +990,22 @@ void SceneTree::set_suspend(bool p_enabled) {
 
 bool SceneTree::is_suspended() const {
 	return suspended;
+}
+
+void SceneTree::set_edit_mode(bool p_enabled) {
+	ERR_FAIL_COND_MSG(!Thread::is_main_thread(), "Edit mode can only be set from the main thread.");
+
+	if (p_enabled == edit_mode) {
+		return;
+	}
+
+	edit_mode = p_enabled;
+
+	Input::get_singleton()->set_suspend(suspended || edit_mode);
+}
+
+bool SceneTree::is_edit_mode() const {
+	return edit_mode;
 }
 
 void SceneTree::_process_group(ProcessGroup *p_group, bool p_physics) {
