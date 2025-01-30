@@ -1545,7 +1545,7 @@ DisplayServer::WindowID DisplayServerWindows::get_window_at_screen_position(cons
 DisplayServer::WindowID DisplayServerWindows::create_sub_window(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Rect2i &p_rect, bool p_exclusive, WindowID p_transient_parent) {
 	_THREAD_SAFE_METHOD_
 
-	WindowID window_id = _create_window(p_mode, p_vsync_mode, p_flags, p_rect, p_exclusive, p_transient_parent, NULL);
+	WindowID window_id = _create_window(p_mode, p_vsync_mode, p_flags, p_rect, p_exclusive, p_transient_parent, main_window_parent);
 	ERR_FAIL_COND_V_MSG(window_id == INVALID_WINDOW_ID, INVALID_WINDOW_ID, "Failed to create sub window.");
 
 	WindowData &wd = windows[window_id];
@@ -2872,6 +2872,7 @@ struct WindowEnumData {
 	DWORD process_id;
 	HWND parent_hWnd;
 	HWND hWnd;
+	String window_title;
 };
 
 static BOOL CALLBACK _enum_proc_find_window_from_process_id_callback(HWND hWnd, LPARAM lParam) {
@@ -2884,6 +2885,13 @@ static BOOL CALLBACK _enum_proc_find_window_from_process_id_callback(HWND hWnd, 
 			return TRUE;
 		}
 
+		wchar_t this_window_title[256];
+		GetWindowTextW(hWnd, this_window_title, sizeof(this_window_title) / sizeof(this_window_title[0]));
+		print_line(String(this_window_title));
+		if (!ed.window_title.is_empty() && String(this_window_title) != ed.window_title) {
+			return TRUE;
+		}
+
 		// Found it.
 		ed.hWnd = hWnd;
 		SetLastError(ERROR_SUCCESS);
@@ -2893,9 +2901,9 @@ static BOOL CALLBACK _enum_proc_find_window_from_process_id_callback(HWND hWnd, 
 	return TRUE;
 }
 
-HWND DisplayServerWindows::_find_window_from_process_id(OS::ProcessID p_pid, HWND p_current_hwnd) {
+HWND DisplayServerWindows::_find_window_from_process_id(OS::ProcessID p_pid, HWND p_current_hwnd, String window_title) {
 	DWORD pid = p_pid;
-	WindowEnumData ed = { pid, p_current_hwnd, NULL };
+	WindowEnumData ed = { pid, p_current_hwnd, NULL, window_title };
 
 	// First, check our own child, maybe it's already embedded.
 	if (!EnumChildWindows(p_current_hwnd, _enum_proc_find_window_from_process_id_callback, (LPARAM)&ed) && (GetLastError() == ERROR_SUCCESS)) {
@@ -2912,7 +2920,7 @@ HWND DisplayServerWindows::_find_window_from_process_id(OS::ProcessID p_pid, HWN
 	return NULL;
 }
 
-Error DisplayServerWindows::embed_process(WindowID p_window, OS::ProcessID p_pid, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) {
+Error DisplayServerWindows::embed_process(WindowID p_window, OS::ProcessID p_pid, String p_embedded_window, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND_V(!windows.has(p_window), FAILED);
@@ -2920,11 +2928,12 @@ Error DisplayServerWindows::embed_process(WindowID p_window, OS::ProcessID p_pid
 	const WindowData &wd = windows[p_window];
 
 	EmbeddedProcessData *ep = nullptr;
-	if (embedded_processes.has(p_pid)) {
-		ep = embedded_processes.get(p_pid);
+	int existing_process_index = get_embedded_process(p_pid, p_embedded_window);
+	if (existing_process_index >= 0) {
+		ep = embedded_processes.get(existing_process_index);
 	} else {
 		// New process, trying to find the window.
-		HWND handle_to_embed = _find_window_from_process_id(p_pid, wd.hWnd);
+		HWND handle_to_embed = _find_window_from_process_id(p_pid, wd.hWnd, p_embedded_window);
 		if (!handle_to_embed) {
 			return ERR_DOES_NOT_EXIST;
 		}
@@ -2932,11 +2941,14 @@ Error DisplayServerWindows::embed_process(WindowID p_window, OS::ProcessID p_pid
 		const DWORD style = GetWindowLongPtr(handle_to_embed, GWL_STYLE);
 
 		ep = memnew(EmbeddedProcessData);
+		ep->process_id = p_pid;
+		ep->window_title = p_embedded_window;
+
 		ep->window_handle = handle_to_embed;
 		ep->parent_window_handle = wd.hWnd;
 		ep->is_visible = (style & WS_VISIBLE) == WS_VISIBLE;
 
-		embedded_processes.insert(p_pid, ep);
+		embedded_processes.push_back(ep);
 	}
 
 	if (p_rect.size.x <= 100 || p_rect.size.y <= 100) {
@@ -2966,14 +2978,15 @@ Error DisplayServerWindows::embed_process(WindowID p_window, OS::ProcessID p_pid
 	return OK;
 }
 
-Error DisplayServerWindows::remove_embedded_process(OS::ProcessID p_pid) {
+Error DisplayServerWindows::remove_embedded_process(OS::ProcessID p_pid, String p_embedded_window) {
 	_THREAD_SAFE_METHOD_
 
-	if (!embedded_processes.has(p_pid)) {
+	int existing_process_index = get_embedded_process(p_pid, p_embedded_window);
+	if (existing_process_index < 0) {
 		return ERR_DOES_NOT_EXIST;
 	}
 
-	EmbeddedProcessData *ep = embedded_processes.get(p_pid);
+	EmbeddedProcessData *ep = embedded_processes.get(existing_process_index);
 
 	// Send a close message to gracefully close the process.
 	PostMessage(ep->window_handle, WM_CLOSE, 0, 0);
@@ -3011,10 +3024,20 @@ Error DisplayServerWindows::remove_embedded_process(OS::ProcessID p_pid) {
 
 	SetForegroundWindow(ep->parent_window_handle);
 
-	embedded_processes.erase(p_pid);
+	embedded_processes.erase(ep);
 	memdelete(ep);
 
 	return OK;
+}
+
+int DisplayServerWindows::get_embedded_process(OS::ProcessID p_pid, String p_embedded_window) {
+	for (int i = 0; i < embedded_processes.size(); i++) {
+		EmbeddedProcessData *this_process = embedded_processes.get(i);
+		if (this_process->process_id == p_pid && this_process->window_title == p_embedded_window) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 OS::ProcessID DisplayServerWindows::get_focused_process_id() {
@@ -6878,9 +6901,12 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	}
 
 	HWND parent_hwnd = NULL;
+	main_window_parent = NULL;
 	if (p_parent_window) {
 		// Parented window.
 		parent_hwnd = (HWND)p_parent_window;
+		// Cache window parent for use with subwindows later.
+		main_window_parent = parent_hwnd;
 	}
 
 	WindowID main_window = _create_window(p_mode, p_vsync_mode, p_flags, Rect2i(window_position, p_resolution), false, INVALID_WINDOW_ID, parent_hwnd);

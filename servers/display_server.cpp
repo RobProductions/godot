@@ -658,12 +658,12 @@ bool DisplayServer::get_swap_cancel_ok() {
 void DisplayServer::enable_for_stealing_focus(OS::ProcessID pid) {
 }
 
-Error DisplayServer::embed_process(WindowID p_window, OS::ProcessID p_pid, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) {
+Error DisplayServer::embed_process(WindowID p_window, OS::ProcessID p_pid, String p_embedded_window, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) {
 	WARN_PRINT("Embedded process not supported by this display server.");
 	return ERR_UNAVAILABLE;
 }
 
-Error DisplayServer::remove_embedded_process(OS::ProcessID p_pid) {
+Error DisplayServer::remove_embedded_process(OS::ProcessID p_pid, String p_embedded_window) {
 	WARN_PRINT("Embedded process not supported by this display server.");
 	return ERR_UNAVAILABLE;
 }

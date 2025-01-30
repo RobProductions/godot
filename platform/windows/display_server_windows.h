@@ -561,6 +561,7 @@ class DisplayServerWindows : public DisplayServer {
 	WindowID _create_window(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Rect2i &p_rect, bool p_exclusive, WindowID p_transient_parent, HWND p_parent_hwnd);
 	WindowID window_id_counter = MAIN_WINDOW_ID;
 	RBMap<WindowID, WindowData> windows;
+	HWND main_window_parent = NULL;
 
 	WindowID last_focused_window = INVALID_WINDOW_ID;
 	WindowID last_mouse_button_down_window = INVALID_WINDOW_ID;
@@ -674,13 +675,17 @@ class DisplayServerWindows : public DisplayServer {
 	String _get_klid(HKL p_hkl) const;
 
 	struct EmbeddedProcessData {
+		OS::ProcessID process_id = NULL;
+		String window_title = "";
+
 		HWND window_handle = 0;
 		HWND parent_window_handle = 0;
 		bool is_visible = false;
 	};
-	HashMap<OS::ProcessID, EmbeddedProcessData *> embedded_processes;
+	List<EmbeddedProcessData *> embedded_processes;
+	int get_embedded_process(OS::ProcessID p_pid, String p_embedded_window);
 
-	HWND _find_window_from_process_id(OS::ProcessID p_pid, HWND p_current_hwnd);
+	HWND _find_window_from_process_id(OS::ProcessID p_pid, HWND p_current_hwnd, String window_title);
 
 public:
 	LRESULT WndProcFileDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -828,8 +833,8 @@ public:
 	virtual bool get_swap_cancel_ok() override;
 
 	virtual void enable_for_stealing_focus(OS::ProcessID pid) override;
-	virtual Error embed_process(WindowID p_window, OS::ProcessID p_pid, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) override;
-	virtual Error remove_embedded_process(OS::ProcessID p_pid) override;
+	virtual Error embed_process(WindowID p_window, OS::ProcessID p_pid, String p_embedded_window, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) override;
+	virtual Error remove_embedded_process(OS::ProcessID p_pid, String p_embedded_window) override;
 	virtual OS::ProcessID get_focused_process_id() override;
 
 	virtual Error dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) override;

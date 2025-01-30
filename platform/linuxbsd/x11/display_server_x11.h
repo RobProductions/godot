@@ -529,8 +529,8 @@ public:
 	virtual void window_start_drag(WindowID p_window = MAIN_WINDOW_ID) override;
 	virtual void window_start_resize(WindowResizeEdge p_edge, WindowID p_window) override;
 
-	virtual Error embed_process(WindowID p_window, OS::ProcessID p_pid, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) override;
-	virtual Error remove_embedded_process(OS::ProcessID p_pid) override;
+	virtual Error embed_process(WindowID p_window, OS::ProcessID p_pid, String p_embedded_window, const Rect2i &p_rect, bool p_visible, bool p_grab_focus) override;
+	virtual Error remove_embedded_process(OS::ProcessID p_pid, String p_embedded_window) override;
 	virtual OS::ProcessID get_focused_process_id() override;
 
 	virtual void cursor_set_shape(CursorShape p_shape) override;

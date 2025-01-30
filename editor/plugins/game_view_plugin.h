@@ -36,6 +36,7 @@
 #include "editor/plugins/editor_plugin.h"
 #include "scene/debugger/scene_debugger.h"
 #include "scene/gui/box_container.h"
+#include "scene/gui/split_container.h"
 
 class EmbeddedProcess;
 class VSeparator;
@@ -208,9 +209,14 @@ public:
 class GameViewPlugin : public EditorPlugin {
 	GDCLASS(GameViewPlugin, EditorPlugin);
 
+	VSplitContainer *game_view_layout = nullptr;
+
 	GameView *game_view = nullptr;
 	WindowWrapper *window_wrapper = nullptr;
+	GameView *top_game_view = nullptr;
+	WindowWrapper *top_window_wrapper = nullptr;
 
+	Ref<GameViewDebugger> top_debugger;
 	Ref<GameViewDebugger> debugger;
 
 	String last_editor;

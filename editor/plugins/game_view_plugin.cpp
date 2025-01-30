@@ -51,11 +51,20 @@
 #include "scene/gui/menu_button.h"
 #include "scene/gui/panel.h"
 #include "scene/gui/separator.h"
+#include "scene/gui/split_container.h"
 
 void GameViewDebugger::_session_started(Ref<EditorDebuggerSession> p_session) {
 	if (!is_feature_enabled) {
 		return;
 	}
+
+	/*
+	Array msg;
+	msg.push_back("root");
+	msg.push_back("Window");
+	msg.push_back("TopDebuggerWindow");
+	p_session->send_message("scene:live_create_node", msg);
+	*/
 
 	Array setup_data;
 	Dictionary settings;
@@ -1020,9 +1029,11 @@ GameView::GameView(Ref<GameViewDebugger> p_debugger, WindowWrapper *p_wrapper) {
 
 void GameViewPlugin::make_visible(bool p_visible) {
 	if (p_visible) {
-		window_wrapper->show();
+		//window_wrapper->show();
+		game_view_layout->show();
 	} else {
-		window_wrapper->hide();
+		//window_wrapper->hide();
+		game_view_layout->hide();
 	}
 }
 
@@ -1099,6 +1110,24 @@ void GameViewPlugin::_focus_another_editor() {
 }
 
 GameViewPlugin::GameViewPlugin() {
+	game_view_layout = memnew(VSplitContainer);
+
+	top_window_wrapper = memnew(WindowWrapper);
+	top_window_wrapper->set_window_title(vformat(TTR("%s - Godot Engine"), TTR("Game Workspace")));
+	top_window_wrapper->set_margins_enabled(true);
+
+	top_debugger.instantiate();
+
+	top_game_view = memnew(GameView(top_debugger, top_window_wrapper));
+	top_game_view->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+
+	top_window_wrapper->set_wrapped_control(top_game_view, nullptr);
+
+	game_view_layout->add_child(top_window_wrapper);
+	top_window_wrapper->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	top_window_wrapper->show();
+	top_window_wrapper->connect("window_visibility_changed", callable_mp(this, &GameViewPlugin::_window_visibility_changed));
+
 	window_wrapper = memnew(WindowWrapper);
 	window_wrapper->set_window_title(vformat(TTR("%s - Godot Engine"), TTR("Game Workspace")));
 	window_wrapper->set_margins_enabled(true);
@@ -1110,10 +1139,14 @@ GameViewPlugin::GameViewPlugin() {
 
 	window_wrapper->set_wrapped_control(game_view, nullptr);
 
-	EditorNode::get_singleton()->get_editor_main_screen()->get_control()->add_child(window_wrapper);
+	game_view_layout->add_child(window_wrapper);
 	window_wrapper->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-	window_wrapper->hide();
+	window_wrapper->show();
 	window_wrapper->connect("window_visibility_changed", callable_mp(this, &GameViewPlugin::_window_visibility_changed));
+
+	EditorNode::get_singleton()->get_editor_main_screen()->get_control()->add_child(game_view_layout);
+	game_view_layout->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	game_view_layout->hide();
 
 	EditorFeatureProfileManager::get_singleton()->connect("current_feature_profile_changed", callable_mp(this, &GameViewPlugin::_feature_profile_changed));
 }
